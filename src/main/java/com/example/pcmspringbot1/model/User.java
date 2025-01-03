@@ -10,6 +10,10 @@ Created on Fri 20:12
 Version 1.0
 */
 
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
 /**
  *  Login -
  *  private String username;
@@ -36,10 +40,10 @@ Version 1.0
  * private String password;
  *     private String email;
  */
-
 public class User {
 
-    @Deprecated
+    @Id
+    @GeneratedValue()
     private Long id;
     private String username;
     private String password;

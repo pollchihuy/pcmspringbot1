@@ -23,6 +23,7 @@ public class BcryptImpl {
     
     public static void main(String[] args) {
         String strUserName = "Paul@123";
+
 //        for (int i = 0; i < 2; i++) {
 //            System.out.println("Hash Ke "+(i+1)+" : " +hash(strUserName));
 //        }
@@ -30,15 +31,5 @@ public class BcryptImpl {
 //        Hash Ke 2 : $2a$11$RKYOQ2OgYMu51KbmhUwZZuDUMwgquAFg1U4n6wbwONjnroKCh5YhC
         System.out.println(verifyHash(strUserName,"$2a$11$r9Uj5UuqePNLoYRmj1yUguDie6cZ0Co/3YudQFVvyPqQE7VwIkzJ6"));
         System.out.println(verifyHash(strUserName,"$2a$11$RKYOQ2OgYMu51KbmhUwZZuDUMwgquAFg1U4n6wbwONjnroKCh5YhC"));
-
-//124|-|@$1/-\
-
-//        String strPwd = "Bima321"+strUserName;
-//        String strAfterEncrypt1 = hash("Paul123");
-//        System.out.println(verifyHash("Bima321Agam123","$2a$11$n9XD7.WaRvzezUfMhA1DxeD5B55kCGkHLSMYBh4l8iTLUJPxM.0si"));
-//        String strAfterEncrypt2 = hash(strPwd);
-//        System.out.println("strAfterEncrypt1 => "+strAfterEncrypt1);
-//        System.out.println("strAfterEncrypt2 => "+strAfterEncrypt2);
-//        System.out.println(verifyHash("Paul123Agam123","$2a$11$mq2Q0OKSO5PnaH6uKdPT0uRxgaq/Pjn7HTTOOGRgjSx.19xjdad.y"));
     }
 }

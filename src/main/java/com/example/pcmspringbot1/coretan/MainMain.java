@@ -1,6 +1,9 @@
 package com.example.pcmspringbot1.coretan;
 
+import com.example.pcmspringbot1.security.BcryptImpl;
 import com.example.pcmspringbot1.security.Crypto;
+
+import java.util.UUID;
 
 /*
 IntelliJ IDEA 2024.1.4 (Ultimate Edition)
@@ -37,6 +40,18 @@ public class MainMain {
 
 //        System.out.println(Crypto.performEncrypt("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"));
 //        ba0ecba5c97bcf63799c0e0ba0e8c9adedbd4f9357404d3e0806c961bf3ce8e6784fdbf889bc228cdf032f067644605257c0dba009f081e29b8498bb2509a24b08eb6ae2256113d7e351688d68eb812df08802d3ecdd60a61f59ee3a52f307412ed7e1c033b8013bca9267dae66e10495e7843b5ab79a3985ed51d2eaac643a0b5a6460f94a9db51c70239335bddf9bab899a1d15796d50d03b79891bd160abc
-        System.out.println(Crypto.performDecrypt("ba0ecba5c97bcf63799c0e0ba0e8c9adedbd4f9357404d3e0806c961bf3ce8e6784fdbf889bc228cdf032f067644605257c0dba009f081e29b8498bb2509a24b08eb6ae2256113d7e351688d68eb812df08802d3ecdd60a61f59ee3a52f307412ed7e1c033b8013bca9267dae66e10495e7843b5ab79a3985ed51d2eaac643a0b5a6460f94a9db51c70239335bddf9bab899a1d15796d50d03b79891bd160abc"));
+//        System.out.println(Crypto.performDecrypt("ba0ecba5c97bcf63799c0e0ba0e8c9adedbd4f9357404d3e0806c961bf3ce8e6784fdbf889bc228cdf032f067644605257c0dba009f081e29b8498bb2509a24b08eb6ae2256113d7e351688d68eb812df08802d3ecdd60a61f59ee3a52f307412ed7e1c033b8013bca9267dae66e10495e7843b5ab79a3985ed51d2eaac643a0b5a6460f94a9db51c70239335bddf9bab899a1d15796d50d03b79891bd160abc"));
+//
+//        for (int i = 0; i < 2; i++) {
+//            System.out.println(Crypto.performEncrypt("Paul@123"));
+//        }
+//        System.out.println("Paul@123".equals(Crypto.performDecrypt("c02ba3d5895193b023388229063bbd91")));
+        //$2a$11$kw/0o4vobCcpK96e/PvXI.wcDcOc.lJYJrUeT2fE5bVU9xNewCKS.
+//        $2a$11$iE9PbKkW8a4WmcXgrcoxkOIZIDh9SAdCZyDHHkD7IZibnqFvC/N6K
+//        System.out.println(BcryptImpl.hash("Paul@123"));
+//        System.out.println(BcryptImpl.verifyHash("Paul@123","$2a$11$iE9PbKkW8a4WmcXgrcoxkOIZIDh9SAdCZyDHHkD7IZibnqFvC/N6K"));
+        System.out.println(UUID.randomUUID());
+//        bf468c1c-cbfb-4f61-91a2-d97e1d420445
+//        4ac72658-d4a0-4f5b-9ee4-1926593d2c1b
     }
 }
