@@ -3,6 +3,9 @@ package com.example.pcmspringbot1.coretan;
 import com.example.pcmspringbot1.security.BcryptImpl;
 import com.example.pcmspringbot1.security.Crypto;
 
+import java.sql.Array;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /*
@@ -53,5 +56,19 @@ public class MainMain {
         System.out.println(UUID.randomUUID());
 //        bf468c1c-cbfb-4f61-91a2-d97e1d420445
 //        4ac72658-d4a0-4f5b-9ee4-1926593d2c1b
+        int intX = 1/0;//SQLException queue
+//        3
+//API 1
+//API 2
+//API 3
+//API 4
+//API 5        4 GB 2 core
+
+//        ArrayList
+//        LinkedList
+//        List
+
+        ArrayList<String> list = new ArrayList<>();
+        List<String> l = new ArrayList<>();
     }
 }
