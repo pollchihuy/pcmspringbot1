@@ -2,7 +2,7 @@ package com.example.pcmspringbot1.controller;
 
 
 import com.example.pcmspringbot1.dto.ContohDTO;
-import com.example.pcmspringbot1.dto.LoginDTO;
+import com.example.pcmspringbot1.dto.validasi.LoginDTO;
 import com.example.pcmspringbot1.dto.UserDTO;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +19,6 @@ public class PostController {
     public String firstPost(@Valid @RequestBody LoginDTO loginDTO){
         System.out.println("Password : "+loginDTO.getPassword());
         System.out.println("Username : "+loginDTO.getUsername());
-        System.out.println("Nama Depan : "+loginDTO.getNamaDepan());
         return "First Post";
     }
 

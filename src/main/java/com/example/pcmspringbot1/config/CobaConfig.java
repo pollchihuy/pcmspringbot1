@@ -10,7 +10,9 @@ Created on Fri 21:30
 Version 1.0
 */
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
@@ -29,4 +31,6 @@ public class CobaConfig {
     public static String getStrCoba() {
         return strCoba;
     }
+
+    
 }

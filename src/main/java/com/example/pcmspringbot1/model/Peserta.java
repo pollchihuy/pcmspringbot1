@@ -18,9 +18,7 @@ import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
-@Table(name = "MstPeserta",indexes = {
-        @Index(name = "idx-cc",columnList = "nama")
-})
+@Table(name = "MstPeserta")
 public class Peserta {
 
     @Id

@@ -4,8 +4,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 
-import java.util.List;
-
 public interface IService<T> {
 
     public ResponseEntity<Object> save(T t, HttpServletRequest request);//001-010

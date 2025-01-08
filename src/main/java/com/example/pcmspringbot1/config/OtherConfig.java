@@ -1,5 +1,8 @@
 package com.example.pcmspringbot1.config;
 
+import jakarta.validation.Valid;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -16,12 +19,22 @@ Created on Fri 21:05
 Version 1.0
 */
 @Configuration
-@PropertySource("classpath:")
+@PropertySource("classpath:other.properties")
 public class OtherConfig {
 
+    private static String enableLogFile;
+
+    public static String getEnableLogFile() {
+        return enableLogFile;
+    }
+
+    @Value("${enable.logfile}")
+    private void setEnableLogFile(String enableLogFile) {
+        OtherConfig.enableLogFile = enableLogFile;
+    }
 
     @Bean
-    public Random getRandom(){
-        return new Random();
+    public ModelMapper modelMapper(){
+        return new ModelMapper();
     }
 }
