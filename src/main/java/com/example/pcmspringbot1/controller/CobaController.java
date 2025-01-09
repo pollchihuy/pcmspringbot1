@@ -25,6 +25,9 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -92,6 +95,34 @@ public class CobaController {
 
     @PostMapping("/save-group-menu")
     public ResponseEntity<Object> save(@RequestBody GroupMenu groupMenu, HttpServletRequest request){
-        return groupMenuService.save(null,request);
+        return groupMenuService.save(groupMenu,request);
+    }
+
+    @PutMapping("/update-group-menu/{id}")
+    public ResponseEntity<Object> update(
+            @PathVariable(value = "id") Long id,
+             @RequestBody GroupMenu groupMenu, HttpServletRequest request){
+        return groupMenuService.update(id,groupMenu,request);
+    }
+
+    @DeleteMapping("/delete-group-menu/{id}")
+    public ResponseEntity<Object> delete(
+            @PathVariable(value = "id") Long id,
+            HttpServletRequest request){
+        return groupMenuService.delete(id,request);
+    }
+
+    @GetMapping("/find-all-group-menu")
+    public ResponseEntity<Object> findAll(
+            HttpServletRequest request){
+        Pageable pageable = PageRequest.of(0,3, Sort.by("id"));//asc
+//        Pageable pageable = PageRequest.of(0,10, Sort.by("id").descending());//desc
+        return groupMenuService.findAll(pageable,request);
+    }
+
+    @GetMapping("/find-by-id-group-menu/{id}")
+    public ResponseEntity<Object> findById(@PathVariable(value = "id") Long id,
+            HttpServletRequest request){
+        return groupMenuService.findById(id,request);
     }
 }

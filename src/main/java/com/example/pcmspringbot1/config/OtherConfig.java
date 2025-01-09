@@ -1,5 +1,6 @@
 package com.example.pcmspringbot1.config;
 
+import com.example.pcmspringbot1.security.Crypto;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,6 +31,7 @@ public class OtherConfig {
 
     @Value("${enable.logfile}")
     private void setEnableLogFile(String enableLogFile) {
+//        OtherConfig.enableLogFile = Crypto.performDecrypt(enableLogFile);
         OtherConfig.enableLogFile = enableLogFile;
     }
 
