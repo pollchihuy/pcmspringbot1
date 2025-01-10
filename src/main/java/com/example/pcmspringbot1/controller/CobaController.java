@@ -20,7 +20,7 @@ import com.example.pcmspringbot1.service.GroupMenuService;
 import com.example.pcmspringbot1.util.GlobalFunction;
 import com.example.pcmspringbot1.util.LoggingFile;
 import jakarta.servlet.http.HttpServletRequest;
-import org.hibernate.query.sql.internal.ParameterRecognizerImpl;
+import jakarta.servlet.http.HttpServletResponse;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,10 +29,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 @RestController
@@ -52,9 +54,13 @@ public class CobaController {
 
     @Autowired
     UserMapper userMapper;
-
-
     ModelMapper modelMapper = new ModelMapper();
+
+    Map<String,String> mapFilter = new HashMap<>();
+
+    public CobaController() {
+        filterColumnByMap();
+    }
 
     @GetMapping("hello1")
     public String htmlRender(){
@@ -124,5 +130,63 @@ public class CobaController {
     public ResponseEntity<Object> findById(@PathVariable(value = "id") Long id,
             HttpServletRequest request){
         return groupMenuService.findById(id,request);
+    }
+
+    /**
+     * Sorting column - PV
+     * Sorting ASC / DESC - PV
+     * Page - PV
+     * Size Per Page - RP
+     * Column - RP
+     * Value - RP
+     */
+    @GetMapping("/find-by-param-group-menu/{sort}/{sortBy}/{page}")
+    public ResponseEntity<Object> findByParam(
+                @PathVariable(value = "sort") String sort,
+                @PathVariable(value = "sortBy") String sortBy,//name
+                @PathVariable(value = "page") Integer page,
+               @RequestParam(value = "size") Integer size,
+               @RequestParam(value = "column") String column,
+               @RequestParam(value = "value") String value,
+               HttpServletRequest request){
+        Pageable pageable = null;
+//        /** contoh 1 - pakai switch case */
+//        sortBy = filterColumn(sortBy);
+//        /** contoh 2 - pakai map */
+//        sortBy = mapFilter.get(sortBy)==null?"id":sortBy;
+        sortBy = mapFilter.get(sortBy)==null?"id":sortBy;
+        if(sort.equals("asc")){
+            pageable = PageRequest.of(page,size, Sort.by(sortBy));//asc
+        }else {
+            pageable = PageRequest.of(page,size, Sort.by(sortBy).descending());//asc
+        }
+        return groupMenuService.findByParam(pageable,column,value,request);
+    }
+
+    @PostMapping("/upload-excel-group-menu")
+    public ResponseEntity<Object> uploadExcel(
+            @RequestParam(value = "file")MultipartFile file,
+            HttpServletRequest request){
+        return groupMenuService.uploadDataExcel(file,request);
+    }
+
+    @GetMapping("/download-excel-group-menu")
+    public void download(
+            @RequestParam(value = "column") String column,
+            @RequestParam(value = "value") String value,
+            HttpServletRequest request,
+            HttpServletResponse response){
+        groupMenuService.downloadReportExcel(column,value,request,response);
+    }
+
+    public String filterColumn(String column){
+        switch (column){
+            case "name": return column;
+            default:return "id";
+        }
+    }
+
+    public void filterColumnByMap(){
+        mapFilter.put("nama","nama");
     }
 }

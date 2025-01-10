@@ -13,6 +13,10 @@ Version 1.0
 import com.example.pcmspringbot1.config.CobaConfig;
 import org.springframework.stereotype.Component;
 
+import java.lang.reflect.Field;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 @Component
 public class GlobalFunction {
 
@@ -22,5 +26,37 @@ public class GlobalFunction {
         if(CobaConfig.getStrCoba().equals("y")){
             System.out.println(obj);
         }
+    }
+
+    public static Map<String,Object> convertClassToObject(Object object){
+        Map<String, Object> map = new LinkedHashMap<>();
+        Field[] fields = object.getClass().getDeclaredFields();
+        for (Field field: fields) {
+            field.setAccessible(true);
+            try {
+                map.put(field.getName(), field.get(object));
+            } catch (IllegalAccessException e) {
+//                LoggingFile.exceptionStringz("GlobalFunction","convertClassToObject",e, OtherConfig.getFlagLogging());
+            }
+        }
+        return map;
+    }
+
+    public static String camelToStandar(String str)
+    {
+        StringBuilder sb = new StringBuilder();
+        char c = str.charAt(0);
+        sb.append(Character.toLowerCase(c));
+        for (int i = 1; i < str.length(); i++) {
+            char ch = str.charAt(i);
+            if (Character.isUpperCase(ch)) {
+                sb.append(' ').append(Character.toLowerCase(ch));
+            }
+            else {
+                sb.append(ch);
+            }
+        }
+
+        return sb.toString();
     }
 }

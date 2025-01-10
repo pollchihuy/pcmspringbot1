@@ -23,6 +23,14 @@
 
 	<dependencies>
 
+		<!-- https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml -->
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>5.4.0</version>
+		</dependency>
+
+
 		<!-- Log4j2 Starter -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
