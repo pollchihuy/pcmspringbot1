@@ -16,6 +16,7 @@ import com.example.pcmspringbot1.dto.response.UserRespDTO;
 import com.example.pcmspringbot1.mapper.UserMapper;
 import com.example.pcmspringbot1.model.GroupMenu;
 import com.example.pcmspringbot1.model.User;
+import com.example.pcmspringbot1.service.DataCobaService;
 import com.example.pcmspringbot1.service.GroupMenuService;
 import com.example.pcmspringbot1.util.GlobalFunction;
 import com.example.pcmspringbot1.util.LoggingFile;
@@ -43,6 +44,9 @@ public class CobaController {
 
     @Autowired
     private GroupMenuService groupMenuService;
+
+    @Autowired
+    private DataCobaService dataCobaService;
 
     @Value("${cumi.goreng}")
     String strData ;
@@ -177,6 +181,46 @@ public class CobaController {
             HttpServletRequest request,
             HttpServletResponse response){
         groupMenuService.downloadReportExcel(column,value,request,response);
+    }
+
+    @GetMapping("/download-excel-data-coba")
+    public void downloadDataCoba(
+            @RequestParam(value = "column") String column,
+            @RequestParam(value = "value") String value,
+            HttpServletRequest request,
+            HttpServletResponse response){
+
+        dataCobaService.downloadReportExcel(column,value,request,response);
+    }
+
+    @GetMapping("/download-excel-data-coba-raw")
+    public void downloadDataCobaRaw(
+            @RequestParam(value = "column") String column,
+            @RequestParam(value = "value") String value,
+            HttpServletRequest request,
+            HttpServletResponse response){
+
+        dataCobaService.downloadReportExcelRaw(column,value,request,response);
+    }
+
+    @GetMapping("/download-pdf-group-menu")
+    public void downloadReportPDFGroupMenu(
+            @RequestParam(value = "column") String column,
+            @RequestParam(value = "value") String value,
+            HttpServletRequest request,
+            HttpServletResponse response){
+
+        groupMenuService.generateToPDF(column,value,request,response);
+    }
+
+    @GetMapping("/download-pdf-data-coba")
+    public void downloadReportPDFDataCoba(
+            @RequestParam(value = "column") String column,
+            @RequestParam(value = "value") String value,
+            HttpServletRequest request,
+            HttpServletResponse response){
+
+        dataCobaService.generateToPDF(column,value,request,response);
     }
 
     public String filterColumn(String column){

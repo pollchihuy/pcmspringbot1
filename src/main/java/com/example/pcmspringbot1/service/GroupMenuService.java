@@ -7,7 +7,6 @@ import com.example.pcmspringbot1.dto.response.RespGroupMenuDTO;
 import com.example.pcmspringbot1.handler.ResponseHandler;
 import com.example.pcmspringbot1.model.GroupMenu;
 import com.example.pcmspringbot1.repo.GroupMenuRepo;
-import com.example.pcmspringbot1.repo.PesertaRepo;
 import com.example.pcmspringbot1.util.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -21,7 +20,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring6.SpringTemplateEngine;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -42,6 +42,12 @@ public class GroupMenuService implements IService<GroupMenu>, IReportForm<GroupM
 
     @Autowired
     private TransformPagination transformPagination;
+
+    @Autowired
+    private PdfGenerator pdfGenerator;
+
+    @Autowired
+    private SpringTemplateEngine springTemplateEngine;
 
     private StringBuilder sbuild = new StringBuilder();
 
@@ -282,7 +288,44 @@ public class GroupMenuService implements IService<GroupMenu>, IReportForm<GroupM
 
     @Override
     public void generateToPDF(String column, String value, HttpServletRequest request, HttpServletResponse response) {
+        List<GroupMenu> groupMenuList = null;
+        switch (column){
+            case "nama":groupMenuList= groupMenuRepo.findByNamaContainsIgnoreCase(value);break;
+            default:groupMenuList= groupMenuRepo.findAll();break;
+        }
+        /** menggunakan response karena sama untuk report */
+        List<RespGroupMenuDTO> respGroupMenuDTOList = convertToListRespGroupMenuDTO(groupMenuList);
+        int intRespGroupMenuDTOList = respGroupMenuDTOList.size();
 
+        if(respGroupMenuDTOList.isEmpty()){
+            return;
+        }
+
+        /** INI OBJECT MAP FINAL */
+        Map<String,Object> map = new HashMap<>();
+        String strHtml = null;
+        Context context = new Context();
+        Map<String,Object> mapColumnName = GlobalFunction.convertClassToObject(new RespGroupMenuDTO());
+        List<String> listTemp = new ArrayList<>();
+        List<String> listHelper = new ArrayList<>();
+        for (Map.Entry<String,Object> entry : mapColumnName.entrySet()) {
+            listTemp.add(GlobalFunction.camelToStandar(entry.getKey()));
+            listHelper.add(entry.getKey());
+        }
+        Map<String,Object> mapTemp = null;
+        List<Map<String,Object>> listMap = new ArrayList<>();
+        for(int i=0;i<listTemp.size();i++){
+            mapTemp = GlobalFunction.convertClassToObject(groupMenuList.get(i));
+            listMap.add(mapTemp);
+        }
+        map.put("title","REPORT GROUP MENU");
+        map.put("timestamp",new Date());
+        map.put("totalData",intRespGroupMenuDTOList);
+        map.put("listContent",groupMenuList);
+        map.put("username","Paul");
+        context.setVariables(map);
+        strHtml = springTemplateEngine.process("/report/groupmenureport",context);
+        pdfGenerator.htmlToPdf(strHtml,"group-menu",response);
     }
 
     public List<RespGroupMenuDTO> convertToListRespGroupMenuDTO(List<GroupMenu> groupMenuList){
