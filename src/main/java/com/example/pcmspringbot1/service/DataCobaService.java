@@ -172,8 +172,7 @@ public class DataCobaService implements IService<DataCoba>, IReportForm<DataCoba
         }
         Map<String,Object> mapTemp = null;
         List<Map<String,Object>> listMap = new ArrayList<>();
-//        for(int i=0;i<dataCobaList.size();i++){
-        for(int i=0;i<5000;i++){
+        for(int i=0;i<dataCobaList.size();i++){
             mapTemp = GlobalFunction.convertClassToObject(dataCobaList.get(i));
             listMap.add(mapTemp);
         }

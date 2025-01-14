@@ -4,10 +4,12 @@ import com.example.pcmspringbot1.config.OtherConfig;
 import com.example.pcmspringbot1.core.IReportForm;
 import com.example.pcmspringbot1.core.IService;
 import com.example.pcmspringbot1.dto.response.RespGroupMenuDTO;
-import com.example.pcmspringbot1.dto.validasi.ValGroupMenuDTO;
+import com.example.pcmspringbot1.dto.response.RespMenuDTO;
+import com.example.pcmspringbot1.dto.validasi.ValMenuDTO;
 import com.example.pcmspringbot1.handler.ResponseHandler;
 import com.example.pcmspringbot1.model.GroupMenu;
-import com.example.pcmspringbot1.repo.GroupMenuRepo;
+import com.example.pcmspringbot1.model.Menu;
+import com.example.pcmspringbot1.repo.MenuRepo;
 import com.example.pcmspringbot1.util.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -23,20 +25,21 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
+
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
  * Platform Code : AUT
- * Modul Code : 01
+ * Modul Code : 02
  * FV = Failed Validation
  * FE = Failed Error
  */
 @Service
-public class GroupMenuService implements IService<GroupMenu>, IReportForm<GroupMenu> {
+public class MenuService implements IService<Menu>, IReportForm<Menu> {
 
     @Autowired
-    private GroupMenuRepo groupMenuRepo;
+    private MenuRepo menuRepo;
 
     @Autowired
     private ModelMapper modelMapper ;
@@ -54,18 +57,18 @@ public class GroupMenuService implements IService<GroupMenu>, IReportForm<GroupM
 
 
     @Override
-    public ResponseEntity<Object> save(GroupMenu groupMenu, HttpServletRequest request) {
+    public ResponseEntity<Object> save(Menu menu, HttpServletRequest request) {
         try{
-            if(groupMenu==null){
-                return GlobalResponse.dataTidakValid("FVAUT01001",request);
+            if(menu==null){
+                return GlobalResponse.dataTidakValid("FVAUT02001",request);
             }
-            groupMenu.setCreatedBy("Paul");
-            groupMenu.setCreatedDate(new Date());
-            groupMenuRepo.save(groupMenu);
+            menu.setCreatedBy("Paul");
+            menu.setCreatedDate(new Date());
+            menuRepo.save(menu);
 
         }catch (Exception e){
-            LoggingFile.logException("GroupMenuService","save --> Line 42",e, OtherConfig.getEnableLogFile());
-            return GlobalResponse.dataGagalDisimpan("FEAUT01001",request);
+            LoggingFile.logException("MenuService","save --> Line 42",e, OtherConfig.getEnableLogFile());
+            return GlobalResponse.dataGagalDisimpan("FEAUT02001",request);
         }
 
         return GlobalResponse.dataBerhasilDisimpan(request);
@@ -73,23 +76,24 @@ public class GroupMenuService implements IService<GroupMenu>, IReportForm<GroupM
 
     @Override
     @Transactional
-    public ResponseEntity<Object> update(Long id, GroupMenu groupMenu, HttpServletRequest request) {
+    public ResponseEntity<Object> update(Long id, Menu menu, HttpServletRequest request) {
         try{
-            if(groupMenu==null){
-                return GlobalResponse.dataTidakValid("FVAUT01011",request);
+            if(menu==null){
+                return GlobalResponse.dataTidakValid("FVAUT02011",request);
             }
-            Optional<GroupMenu> groupMenuOptional = groupMenuRepo.findById(id);
-            if(!groupMenuOptional.isPresent()){
+            Optional<Menu> menuOptional = menuRepo.findById(id);
+            if(!menuOptional.isPresent()){
                 return GlobalResponse.dataTidakDitemukan(request);
             }
-            GroupMenu groupMenuDB = groupMenuOptional.get();
-            groupMenuDB.setUpdatedBy("Reksa");
-            groupMenuDB.setUpdatedDate(new Date());
-            groupMenuDB.setNama(groupMenu.getNama());
+            Menu menuDB = menuOptional.get();
+            menuDB.setUpdatedBy("Reksa");
+            menuDB.setUpdatedDate(new Date());
+            menuDB.setNama(menu.getNama());
+            menuDB.setGroupMenu(menu.getGroupMenu());//ini relasi nya
 
         }catch (Exception e){
-            LoggingFile.logException("GroupMenuService","update --> Line 75",e, OtherConfig.getEnableLogFile());
-            return GlobalResponse.dataGagalDiubah("FEAUT01011",request);
+            LoggingFile.logException("MenuService","update --> Line 75",e, OtherConfig.getEnableLogFile());
+            return GlobalResponse.dataGagalDiubah("FEAUT02011",request);
         }
         return GlobalResponse.dataBerhasilDiubah(request);
     }
@@ -98,25 +102,25 @@ public class GroupMenuService implements IService<GroupMenu>, IReportForm<GroupM
     @Transactional
     public ResponseEntity<Object> delete(Long id, HttpServletRequest request) {
         try{
-            Optional<GroupMenu> groupMenuOptional = groupMenuRepo.findById(id);
-            if(!groupMenuOptional.isPresent()){
+            Optional<Menu> menuOptional = menuRepo.findById(id);
+            if(!menuOptional.isPresent()){
                 return GlobalResponse.dataTidakDitemukan(request);
             }
-            groupMenuRepo.deleteById(id);
+            menuRepo.deleteById(id);
         }catch (Exception e){
-            LoggingFile.logException("GroupMenuService","delete --> Line 111",e, OtherConfig.getEnableLogFile());
-            return GlobalResponse.dataGagalDiubah("FEAUT01021",request);
+            LoggingFile.logException("MenuService","delete --> Line 111",e, OtherConfig.getEnableLogFile());
+            return GlobalResponse.dataGagalDiubah("FEAUT02021",request);
         }
         return GlobalResponse.dataBerhasilDihapus(request);
     }
 
     @Override
     public ResponseEntity<Object> findAll(Pageable pageable, HttpServletRequest request) {
-        Page<GroupMenu> page = null;
-        List<GroupMenu> list = null;
-        page = groupMenuRepo.findAll(pageable);
+        Page<Menu> page = null;
+        List<Menu> list = null;
+        page = menuRepo.findAll(pageable);
         list = page.getContent();
-        List<RespGroupMenuDTO> listDTO = convertToListRespGroupMenuDTO(list);
+        List<RespMenuDTO> listDTO = convertToListRespMenuDTO(list);
 
         if(list.isEmpty()){
             return GlobalResponse.dataTidakDitemukan(request);
@@ -128,37 +132,38 @@ public class GroupMenuService implements IService<GroupMenu>, IReportForm<GroupM
 
     @Override
     public ResponseEntity<Object> findById(Long id, HttpServletRequest request) {
-        RespGroupMenuDTO respGroupMenuDTO;
+        RespMenuDTO respMenuDTO;
         try{
-            Optional<GroupMenu> groupMenuOptional = groupMenuRepo.findById(id);
-            if(!groupMenuOptional.isPresent()){
+            Optional<Menu> menuOptional = menuRepo.findById(id);
+            if(!menuOptional.isPresent()){
                 return GlobalResponse.dataTidakDitemukan(request);
             }
-            GroupMenu groupMenuDB = groupMenuOptional.get();
-            respGroupMenuDTO = modelMapper.map(groupMenuDB, RespGroupMenuDTO.class);
+            Menu menuDB = menuOptional.get();
+            respMenuDTO = modelMapper.map(menuDB, RespMenuDTO.class);
         }catch (Exception e){
-            LoggingFile.logException("GroupMenuService","findById --> Line 162",e, OtherConfig.getEnableLogFile());
-            return GlobalResponse.dataGagalDiakses("FEAUT01041",request);
+            LoggingFile.logException("MenuService","findById --> Line 162",e, OtherConfig.getEnableLogFile());
+            return GlobalResponse.dataGagalDiakses("FEAUT02041",request);
         }
         return new ResponseHandler().handleResponse("OK",
                 HttpStatus.OK,
-                respGroupMenuDTO,null,request);
+                respMenuDTO,null,request);
     }
 
     @Override
     public ResponseEntity<Object> findByParam(Pageable pageable, String columnName, String value, HttpServletRequest request) {
-        Page<GroupMenu> page = null;
-        List<GroupMenu> list = null;
+        Page<Menu> page = null;
+        List<Menu> list = null;
         switch(columnName){
 
-            case "nama": page = groupMenuRepo.findByNamaContainsIgnoreCase(pageable,value);break;
-            default : page = groupMenuRepo.findAll(pageable);break;
+            case "nama": page = menuRepo.findByNamaContainsIgnoreCase(pageable,value);break;
+//            case "group": page = menuRepo.cariGroupMenu(pageable,value);break;
+            default : page = menuRepo.findAll(pageable);break;
         }
         list = page.getContent();
         if(list.isEmpty()){
             return GlobalResponse.dataTidakDitemukan(request);
         }
-        List<RespGroupMenuDTO> listDTO = convertToListRespGroupMenuDTO(list);
+        List<RespMenuDTO> listDTO = convertToListRespMenuDTO(list);
         Map<String, Object> mapList = transformPagination.transformPagination(listDTO,page,columnName,value);
         return GlobalResponse.dataResponseList(mapList,request);
     }
@@ -178,37 +183,38 @@ public class GroupMenuService implements IService<GroupMenu>, IReportForm<GroupM
                     return GlobalResponse.dataFileKosong(request);
                 }
             }
-            groupMenuRepo.saveAll(convertListWorkBookToListEntity(lt,1L));
+            menuRepo.saveAll(convertListWorkBookToListEntity(lt,1L));
         }catch (Exception e){
-            LoggingFile.logException("GroupMenuService","upload excel --> Line 213",e, OtherConfig.getEnableLogFile());
-            return GlobalResponse.fileExcelGagalDiproses("FEAUT01061",request);
+            LoggingFile.logException("MenuService","upload excel --> Line 213",e, OtherConfig.getEnableLogFile());
+            return GlobalResponse.fileExcelGagalDiproses("FEAUT02061",request);
         }
         return GlobalResponse.dataBerhasilDisimpan(request);
     }
 
     @Override
-    public List<GroupMenu> convertListWorkBookToListEntity(List<Map<String, String>> workBookData, Long userId) {
-        List<GroupMenu> list = new ArrayList<>();
+    public List<Menu> convertListWorkBookToListEntity(List<Map<String, String>> workBookData, Long userId) {
+        List<Menu> list = new ArrayList<>();
         for (int i = 0; i < workBookData.size(); i++) {
             Map<String, String> map = workBookData.get(i);
-            GroupMenu groupMenu = new GroupMenu();
-            groupMenu.setNama(map.get("nama-group-menu"));
-            groupMenu.setCreatedBy(String.valueOf(userId));
-            groupMenu.setCreatedDate(new Date());
-            list.add(groupMenu);
+            Menu menu = new Menu();
+            menu.setNama(map.get("nama-menu"));
+            menu.setCreatedBy(String.valueOf(userId));
+            menu.setCreatedDate(new Date());
+            list.add(menu);
         }
         return list;
     }
 
     @Override
     public void downloadReportExcel(String column, String value, HttpServletRequest request, HttpServletResponse response) {
-        List<GroupMenu> groupMenuList = null;
+        List<Menu> menuList = null;
         switch (column){
-            case "nama":groupMenuList= groupMenuRepo.findByNamaContainsIgnoreCase(value);break;
-            default:groupMenuList= groupMenuRepo.findAll();break;
+            case "nama":menuList= menuRepo.findByNamaContainsIgnoreCase(value);break;
+//            case "group":menuList= menuRepo.cariGroupMenu(value);break;
+            default:menuList= menuRepo.findAll();break;
         }
         /** menggunakan response karena sama untuk report */
-        List<RespGroupMenuDTO> respGroupMenuDTOList = convertToListRespGroupMenuDTO(groupMenuList);
+        List<RespMenuDTO> respGroupMenuDTOList = convertToListRespMenuDTO(menuList);
         if(respGroupMenuDTOList.isEmpty()){
             GlobalResponse.manualResponse(response,GlobalResponse.dataTidakDitemukan(request));
             return;
@@ -252,13 +258,14 @@ public class GroupMenuService implements IService<GroupMenu>, IReportForm<GroupM
 
     @Override
     public void generateToPDF(String column, String value, HttpServletRequest request, HttpServletResponse response) {
-        List<GroupMenu> groupMenuList = null;
+        List<Menu> menuList = null;
         switch (column){
-            case "nama":groupMenuList= groupMenuRepo.findByNamaContainsIgnoreCase(value);break;
-            default:groupMenuList= groupMenuRepo.findAll();break;
+            case "nama":menuList= menuRepo.findByNamaContainsIgnoreCase(value);break;
+//            case "group":menuList= menuRepo.cariGroupMenu(value);break;
+            default:menuList= menuRepo.findAll();break;
         }
         /** menggunakan response karena sama untuk report */
-        List<RespGroupMenuDTO> respGroupMenuDTOList = convertToListRespGroupMenuDTO(groupMenuList);
+        List<RespMenuDTO> respGroupMenuDTOList = convertToListRespMenuDTO(menuList);
         int intRespGroupMenuDTOList = respGroupMenuDTOList.size();
 
         if(respGroupMenuDTOList.isEmpty()){
@@ -280,11 +287,11 @@ public class GroupMenuService implements IService<GroupMenu>, IReportForm<GroupM
         Map<String,Object> mapTemp = null;
         List<Map<String,Object>> listMap = new ArrayList<>();
         for(int i=0;i<listTemp.size();i++){
-            mapTemp = GlobalFunction.convertClassToObject(groupMenuList.get(i));
+            mapTemp = GlobalFunction.convertClassToObject(menuList.get(i));
             listMap.add(mapTemp);
         }
 
-        map.put("title","REPORT DATA GROUP MENU");
+        map.put("title","REPORT DATA MENU");
         map.put("listKolom",listTemp);
         map.put("listHelper",listHelper);
         map.put("timestamp",new Date());
@@ -293,58 +300,14 @@ public class GroupMenuService implements IService<GroupMenu>, IReportForm<GroupM
         map.put("username","Paul");
         context.setVariables(map);
         strHtml = springTemplateEngine.process("global-report",context);
-        pdfGenerator.htmlToPdf(strHtml,"group-menu",response);
+        pdfGenerator.htmlToPdf(strHtml,"menu",response);
     }
 
-    public void generateToPDFManual(String column, String value, HttpServletRequest request, HttpServletResponse response) {
-        List<GroupMenu> groupMenuList = null;
-        switch (column){
-            case "nama":groupMenuList= groupMenuRepo.findByNamaContainsIgnoreCase(value);break;
-            default:groupMenuList= groupMenuRepo.findAll();break;
-        }
-        /** menggunakan response karena sama untuk report */
-        List<RespGroupMenuDTO> respGroupMenuDTOList = convertToListRespGroupMenuDTO(groupMenuList);
-        int intRespGroupMenuDTOList = respGroupMenuDTOList.size();
-
-        if(respGroupMenuDTOList.isEmpty()){
-            GlobalResponse.manualResponse(response,GlobalResponse.dataTidakDitemukan(request));
-            return;
-        }
-
-        /** INI OBJECT MAP FINAL */
-        Map<String,Object> map = new HashMap<>();
-        String strHtml = null;
-        Context context = new Context();
-        Map<String,Object> mapColumnName = GlobalFunction.convertClassToObject(new RespGroupMenuDTO());
-        List<String> listTemp = new ArrayList<>();
-        List<String> listHelper = new ArrayList<>();
-        for (Map.Entry<String,Object> entry : mapColumnName.entrySet()) {
-            listTemp.add(GlobalFunction.camelToStandar(entry.getKey()));
-            listHelper.add(entry.getKey());
-        }
-        Map<String,Object> mapTemp = null;
-        List<Map<String,Object>> listMap = new ArrayList<>();
-        for(int i=0;i<listTemp.size();i++){
-            mapTemp = GlobalFunction.convertClassToObject(groupMenuList.get(i));
-            listMap.add(mapTemp);
-        }
-        map.put("title","REPORT GROUP MENU");
-        map.put("timestamp",new Date());
-        map.put("totalData",intRespGroupMenuDTOList);
-        map.put("listContent",groupMenuList);
-        map.put("username","Paul");
-        context.setVariables(map);
-        strHtml = springTemplateEngine.process("/report/groupmenureport",context);
-        pdfGenerator.htmlToPdf(strHtml,"group-menu",response);
+    public List<RespMenuDTO> convertToListRespMenuDTO(List<Menu> menuList){
+        return modelMapper.map(menuList,new TypeToken<List<RespMenuDTO>>(){}.getType());
     }
 
-    public List<RespGroupMenuDTO> convertToListRespGroupMenuDTO(List<GroupMenu> groupMenuList){
-        return modelMapper.map(groupMenuList,new TypeToken<List<RespGroupMenuDTO>>(){}.getType());
+    public Menu convertToMenu(ValMenuDTO menuDTO){
+        return modelMapper.map(menuDTO,Menu.class);
     }
-
-    public GroupMenu convertToListRespGroupMenuDTO(ValGroupMenuDTO groupMenuDTO){
-        return modelMapper.map(groupMenuDTO,GroupMenu.class);
-    }
-
-
 }
