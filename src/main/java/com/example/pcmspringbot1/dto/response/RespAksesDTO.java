@@ -1,5 +1,9 @@
 package com.example.pcmspringbot1.dto.response;
 
+import com.example.pcmspringbot1.model.Menu;
+
+import java.util.List;
+
 /*
 IntelliJ IDEA 2024.1.4 (Ultimate Edition)
 Build #IU-241.18034.62, built on June 21, 2024
@@ -9,19 +13,11 @@ Created on Wed 19:38
 @Last Modified Wed 19:38
 Version 1.0
 */
-public class AksesDTO {
+public class RespAksesDTO {
 
-    private Long id;
     private String nama;
 
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+    private List<Menu> ltMenu;
 
     public String getNama() {
         return nama;
@@ -29,5 +25,13 @@ public class AksesDTO {
 
     public void setNama(String nama) {
         this.nama = nama;
+    }
+
+    public List<Menu> getLtMenu() {
+        return ltMenu;
+    }
+
+    public void setLtMenu(List<Menu> ltMenu) {
+        this.ltMenu = ltMenu;
     }
 }

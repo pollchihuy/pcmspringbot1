@@ -1,7 +1,5 @@
 package com.example.pcmspringbot1.dto.response;
 
-import com.example.pcmspringbot1.model.Akses;
-
 public class UserRespDTO {
 
     private Long id;
@@ -9,7 +7,7 @@ public class UserRespDTO {
     private String email;
     private String alamat;
     private String noHp;
-    private AksesDTO akses;
+    private RespAksesDTO akses;
 
     public Long getId() {
         return id;
@@ -51,11 +49,11 @@ public class UserRespDTO {
         this.noHp = noHp;
     }
 
-    public AksesDTO getAkses() {
+    public RespAksesDTO getAkses() {
         return akses;
     }
 
-    public void setAkses(AksesDTO akses) {
+    public void setAkses(RespAksesDTO akses) {
         this.akses = akses;
     }
 }

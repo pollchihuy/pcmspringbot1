@@ -3,13 +3,12 @@ package com.example.pcmspringbot1.service;
 import com.example.pcmspringbot1.config.OtherConfig;
 import com.example.pcmspringbot1.core.IReportForm;
 import com.example.pcmspringbot1.core.IService;
-import com.example.pcmspringbot1.dto.response.RespGroupMenuDTO;
-import com.example.pcmspringbot1.dto.response.RespMenuDTO;
-import com.example.pcmspringbot1.dto.validasi.ValMenuDTO;
+import com.example.pcmspringbot1.dto.response.RespAksesDTO;
+import com.example.pcmspringbot1.dto.validasi.ValAksesDTO;
 import com.example.pcmspringbot1.handler.ResponseHandler;
-import com.example.pcmspringbot1.model.GroupMenu;
-import com.example.pcmspringbot1.model.Menu;
-import com.example.pcmspringbot1.repo.MenuRepo;
+import com.example.pcmspringbot1.model.Akses;
+import com.example.pcmspringbot1.model.Akses;
+import com.example.pcmspringbot1.repo.AksesRepo;
 import com.example.pcmspringbot1.util.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -31,15 +30,15 @@ import java.util.*;
 
 /**
  * Platform Code : AUT
- * Modul Code : 02
+ * Modul Code : 03
  * FV = Failed Validation
  * FE = Failed Error
  */
 @Service
-public class MenuService implements IService<Menu>, IReportForm<Menu> {
+public class AksesService implements IService<Akses>, IReportForm<Akses> {
 
     @Autowired
-    private MenuRepo menuRepo;
+    private AksesRepo aksesRepo;
 
     @Autowired
     private ModelMapper modelMapper ;
@@ -55,19 +54,20 @@ public class MenuService implements IService<Menu>, IReportForm<Menu> {
 
     private StringBuilder sbuild = new StringBuilder();
 
-
     @Override
-    public ResponseEntity<Object> save(Menu menu, HttpServletRequest request) {
+    public ResponseEntity<Object> save(Akses akses, HttpServletRequest request) {
         try{
-            if(menu==null){
-                return GlobalResponse.dataTidakValid("FVAUT02001",request);
+            if(akses==null){
+                return GlobalResponse.dataTidakValid("FVAUT03001",request);
             }
-            menu.setCreatedBy("Paul");
-            menu.setCreatedDate(new Date());
-            menuRepo.save(menu);
+            akses.setCreatedBy("Paul");
+            akses.setCreatedDate(new Date());
+            akses.setLtMenu(akses.getLtMenu());
+
+            aksesRepo.save(akses);
         }catch (Exception e){
-            LoggingFile.logException("MenuService","save --> Line 42",e, OtherConfig.getEnableLogFile());
-            return GlobalResponse.dataGagalDisimpan("FEAUT02001",request);
+            LoggingFile.logException("AksesService","save --> Line 42",e, OtherConfig.getEnableLogFile());
+            return GlobalResponse.dataGagalDisimpan("FEAUT03001",request);
         }
 
         return GlobalResponse.dataBerhasilDisimpan(request);
@@ -75,24 +75,24 @@ public class MenuService implements IService<Menu>, IReportForm<Menu> {
 
     @Override
     @Transactional
-    public ResponseEntity<Object> update(Long id, Menu menu, HttpServletRequest request) {
+    public ResponseEntity<Object> update(Long id, Akses akses, HttpServletRequest request) {
         try{
-            if(menu==null){
-                return GlobalResponse.dataTidakValid("FVAUT02011",request);
+            if(akses==null){
+                return GlobalResponse.dataTidakValid("FVAUT03011",request);
             }
-            Optional<Menu> menuOptional = menuRepo.findById(id);
-            if(!menuOptional.isPresent()){
+            Optional<Akses> aksesOptional = aksesRepo.findById(id);
+            if(!aksesOptional.isPresent()){
                 return GlobalResponse.dataTidakDitemukan(request);
             }
-            Menu menuDB = menuOptional.get();
-            menuDB.setUpdatedBy("Reksa");
-            menuDB.setUpdatedDate(new Date());
-            menuDB.setNama(menu.getNama());
-            menuDB.setGroupMenu(menu.getGroupMenu());//ini relasi nya
+            Akses aksesDB = aksesOptional.get();
+            aksesDB.setUpdatedBy("Reksa");
+            aksesDB.setUpdatedDate(new Date());
+            aksesDB.setNama(akses.getNama());
+            aksesDB.setLtMenu(akses.getLtMenu());
 
         }catch (Exception e){
-            LoggingFile.logException("MenuService","update --> Line 75",e, OtherConfig.getEnableLogFile());
-            return GlobalResponse.dataGagalDiubah("FEAUT02011",request);
+            LoggingFile.logException("AksesService","update --> Line 75",e, OtherConfig.getEnableLogFile());
+            return GlobalResponse.dataGagalDiubah("FEAUT03011",request);
         }
         return GlobalResponse.dataBerhasilDiubah(request);
     }
@@ -101,25 +101,25 @@ public class MenuService implements IService<Menu>, IReportForm<Menu> {
     @Transactional
     public ResponseEntity<Object> delete(Long id, HttpServletRequest request) {
         try{
-            Optional<Menu> menuOptional = menuRepo.findById(id);
-            if(!menuOptional.isPresent()){
+            Optional<Akses> aksesOptional = aksesRepo.findById(id);
+            if(!aksesOptional.isPresent()){
                 return GlobalResponse.dataTidakDitemukan(request);
             }
-            menuRepo.deleteById(id);
+            aksesRepo.deleteById(id);
         }catch (Exception e){
-            LoggingFile.logException("MenuService","delete --> Line 111",e, OtherConfig.getEnableLogFile());
-            return GlobalResponse.dataGagalDiubah("FEAUT02021",request);
+            LoggingFile.logException("AksesService","delete --> Line 111",e, OtherConfig.getEnableLogFile());
+            return GlobalResponse.dataGagalDiubah("FEAUT03021",request);
         }
         return GlobalResponse.dataBerhasilDihapus(request);
     }
 
     @Override
     public ResponseEntity<Object> findAll(Pageable pageable, HttpServletRequest request) {
-        Page<Menu> page = null;
-        List<Menu> list = null;
-        page = menuRepo.findAll(pageable);
+        Page<Akses> page = null;
+        List<Akses> list = null;
+        page = aksesRepo.findAll(pageable);
         list = page.getContent();
-        List<RespMenuDTO> listDTO = convertToListRespMenuDTO(list);
+        List<RespAksesDTO> listDTO = convertToListRespAksesDTO(list);
 
         if(list.isEmpty()){
             return GlobalResponse.dataTidakDitemukan(request);
@@ -131,38 +131,37 @@ public class MenuService implements IService<Menu>, IReportForm<Menu> {
 
     @Override
     public ResponseEntity<Object> findById(Long id, HttpServletRequest request) {
-        RespMenuDTO respMenuDTO;
+        RespAksesDTO respAksesDTO;
         try{
-            Optional<Menu> menuOptional = menuRepo.findById(id);
-            if(!menuOptional.isPresent()){
+            Optional<Akses> aksesOptional = aksesRepo.findById(id);
+            if(!aksesOptional.isPresent()){
                 return GlobalResponse.dataTidakDitemukan(request);
             }
-            Menu menuDB = menuOptional.get();
-            respMenuDTO = modelMapper.map(menuDB, RespMenuDTO.class);
+            Akses aksesDB = aksesOptional.get();
+            respAksesDTO = modelMapper.map(aksesDB, RespAksesDTO.class);
         }catch (Exception e){
-            LoggingFile.logException("MenuService","findById --> Line 162",e, OtherConfig.getEnableLogFile());
-            return GlobalResponse.dataGagalDiakses("FEAUT02041",request);
+            LoggingFile.logException("AksesService","findById --> Line 162",e, OtherConfig.getEnableLogFile());
+            return GlobalResponse.dataGagalDiakses("FEAUT03041",request);
         }
         return new ResponseHandler().handleResponse("OK",
                 HttpStatus.OK,
-                respMenuDTO,null,request);
+                respAksesDTO,null,request);
     }
 
     @Override
     public ResponseEntity<Object> findByParam(Pageable pageable, String columnName, String value, HttpServletRequest request) {
-        Page<Menu> page = null;
-        List<Menu> list = null;
+        Page<Akses> page = null;
+        List<Akses> list = null;
         switch(columnName){
 
-            case "nama": page = menuRepo.findByNamaContainsIgnoreCase(pageable,value);break;
-            case "group": page = menuRepo.cariGroupMenu(pageable,value);break;
-            default : page = menuRepo.findAll(pageable);break;
+            case "nama": page = aksesRepo.findByNamaContainsIgnoreCase(pageable,value);break;
+            default : page = aksesRepo.findAll(pageable);break;
         }
         list = page.getContent();
         if(list.isEmpty()){
             return GlobalResponse.dataTidakDitemukan(request);
         }
-        List<RespMenuDTO> listDTO = convertToListRespMenuDTO(list);
+        List<RespAksesDTO> listDTO = convertToListRespAksesDTO(list);
         Map<String, Object> mapList = transformPagination.transformPagination(listDTO,page,columnName,value);
         return GlobalResponse.dataResponseList(mapList,request);
     }
@@ -182,20 +181,20 @@ public class MenuService implements IService<Menu>, IReportForm<Menu> {
                     return GlobalResponse.dataFileKosong(request);
                 }
             }
-            menuRepo.saveAll(convertListWorkBookToListEntity(lt,1L));
+            aksesRepo.saveAll(convertListWorkBookToListEntity(lt,1L));
         }catch (Exception e){
-            LoggingFile.logException("MenuService","upload excel --> Line 213",e, OtherConfig.getEnableLogFile());
-            return GlobalResponse.fileExcelGagalDiproses("FEAUT02061",request);
+            LoggingFile.logException("AksesService","upload excel --> Line 213",e, OtherConfig.getEnableLogFile());
+            return GlobalResponse.fileExcelGagalDiproses("FEAUT03061",request);
         }
         return GlobalResponse.dataBerhasilDisimpan(request);
     }
 
     @Override
-    public List<Menu> convertListWorkBookToListEntity(List<Map<String, String>> workBookData, Long userId) {
-        List<Menu> list = new ArrayList<>();
+    public List<Akses> convertListWorkBookToListEntity(List<Map<String, String>> workBookData, Long userId) {
+        List<Akses> list = new ArrayList<>();
         for (int i = 0; i < workBookData.size(); i++) {
             Map<String, String> map = workBookData.get(i);
-            Menu menu = new Menu();
+            Akses menu = new Akses();
             menu.setNama(map.get("nama-menu"));
             menu.setCreatedBy(String.valueOf(userId));
             menu.setCreatedDate(new Date());
@@ -206,15 +205,15 @@ public class MenuService implements IService<Menu>, IReportForm<Menu> {
 
     @Override
     public void downloadReportExcel(String column, String value, HttpServletRequest request, HttpServletResponse response) {
-        List<Menu> menuList = null;
+        List<Akses> aksesList = null;
         switch (column){
-            case "nama":menuList= menuRepo.findByNamaContainsIgnoreCase(value);break;
-//            case "group":menuList= menuRepo.cariGroupMenu(value);break;
-            default:menuList= menuRepo.findAll();break;
+            case "nama":aksesList= aksesRepo.findByNamaContainsIgnoreCase(value);break;
+//            case "group":menuList= menuRepo.cariGroupAkses(value);break;
+            default:aksesList= aksesRepo.findAll();break;
         }
         /** menggunakan response karena sama untuk report */
-        List<RespMenuDTO> respGroupMenuDTOList = convertToListRespMenuDTO(menuList);
-        if(respGroupMenuDTOList.isEmpty()){
+        List<RespAksesDTO> respGroupAksesDTOList = convertToListRespAksesDTO(aksesList);
+        if(respGroupAksesDTOList.isEmpty()){
             GlobalResponse.manualResponse(response,GlobalResponse.dataTidakDitemukan(request));
             return;
         }
@@ -228,7 +227,7 @@ public class MenuService implements IService<Menu>, IReportForm<Menu> {
         response.setHeader(headerKey, headerValue);
         response.setContentType("application/octet-stream");
 
-        Map<String,Object> map = GlobalFunction.convertClassToObject(new RespMenuDTO());
+        Map<String,Object> map = GlobalFunction.convertClassToObject(new RespAksesDTO());
         List<String> listTemp = new ArrayList<>();
         for(Map.Entry<String,Object> entry : map.entrySet()){
             listTemp.add(entry.getKey());
@@ -244,10 +243,10 @@ public class MenuService implements IService<Menu>, IReportForm<Menu> {
             loopDataArr[i] = listTemp.get(i);
         }
         /** Untuk mempersiapkan data body baris nya */
-        int listRespGroupMenuDTOSize = respGroupMenuDTOList.size();
-        String [][] strBody = new String[listRespGroupMenuDTOSize][intListTemp];
-        for(int i=0;i<listRespGroupMenuDTOSize;i++){
-            map = GlobalFunction.convertClassToObject(respGroupMenuDTOList.get(i));
+        int listRespGroupAksesDTOSize = respGroupAksesDTOList.size();
+        String [][] strBody = new String[listRespGroupAksesDTOSize][intListTemp];
+        for(int i=0;i<listRespGroupAksesDTOSize;i++){
+            map = GlobalFunction.convertClassToObject(respGroupAksesDTOList.get(i));
             for(int j=0;j<intListTemp;j++){
                 strBody[i][j] = String.valueOf(map.get(loopDataArr[j]));
             }
@@ -257,17 +256,17 @@ public class MenuService implements IService<Menu>, IReportForm<Menu> {
 
     @Override
     public void generateToPDF(String column, String value, HttpServletRequest request, HttpServletResponse response) {
-        List<Menu> menuList = null;
+        List<Akses> menuList = null;
         switch (column){
-            case "nama":menuList= menuRepo.findByNamaContainsIgnoreCase(value);break;
-//            case "group":menuList= menuRepo.cariGroupMenu(value);break;
-            default:menuList= menuRepo.findAll();break;
+            case "nama":menuList= aksesRepo.findByNamaContainsIgnoreCase(value);break;
+//            case "group":menuList= menuRepo.cariGroupAkses(value);break;
+            default:menuList= aksesRepo.findAll();break;
         }
         /** menggunakan response karena sama untuk report */
-        List<RespMenuDTO> respGroupMenuDTOList = convertToListRespMenuDTO(menuList);
-        int intRespGroupMenuDTOList = respGroupMenuDTOList.size();
+        List<RespAksesDTO> respGroupAksesDTOList = convertToListRespAksesDTO(menuList);
+        int intRespGroupAksesDTOList = respGroupAksesDTOList.size();
 
-        if(respGroupMenuDTOList.isEmpty()){
+        if(respGroupAksesDTOList.isEmpty()){
             GlobalResponse.manualResponse(response,GlobalResponse.dataTidakDitemukan(request));
             return;
         }
@@ -276,7 +275,7 @@ public class MenuService implements IService<Menu>, IReportForm<Menu> {
         Map<String,Object> map = new HashMap<>();
         String strHtml = null;
         Context context = new Context();
-        Map<String,Object> mapColumnName = GlobalFunction.convertClassToObject(new RespMenuDTO());
+        Map<String,Object> mapColumnName = GlobalFunction.convertClassToObject(new RespAksesDTO());
         List<String> listTemp = new ArrayList<>();
         List<String> listHelper = new ArrayList<>();
         for (Map.Entry<String,Object> entry : mapColumnName.entrySet()) {
@@ -290,23 +289,23 @@ public class MenuService implements IService<Menu>, IReportForm<Menu> {
             listMap.add(mapTemp);
         }
 
-        map.put("title","REPORT DATA MENU");
+        map.put("title","REPORT DATA AKSES");
         map.put("listKolom",listTemp);
         map.put("listHelper",listHelper);
         map.put("timestamp",new Date());
-        map.put("totalData",intRespGroupMenuDTOList);
+        map.put("totalData",intRespGroupAksesDTOList);
         map.put("listContent",listMap);
         map.put("username","Paul");
         context.setVariables(map);
         strHtml = springTemplateEngine.process("global-report",context);
-        pdfGenerator.htmlToPdf(strHtml,"menu",response);
+        pdfGenerator.htmlToPdf(strHtml,"akses",response);
     }
 
-    public List<RespMenuDTO> convertToListRespMenuDTO(List<Menu> menuList){
-        return modelMapper.map(menuList,new TypeToken<List<RespMenuDTO>>(){}.getType());
+    public List<RespAksesDTO> convertToListRespAksesDTO(List<Akses> aksesList){
+        return modelMapper.map(aksesList,new TypeToken<List<RespAksesDTO>>(){}.getType());
     }
 
-    public Menu convertToMenu(ValMenuDTO menuDTO){
-        return modelMapper.map(menuDTO,Menu.class);
+    public Akses convertToAkses(ValAksesDTO aksesDTO){
+        return modelMapper.map(aksesDTO,Akses.class);
     }
 }

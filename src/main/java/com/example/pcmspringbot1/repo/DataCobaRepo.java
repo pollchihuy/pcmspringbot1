@@ -1,13 +1,10 @@
 package com.example.pcmspringbot1.repo;
 
 import com.example.pcmspringbot1.model.DataCoba;
-import com.example.pcmspringbot1.model.GroupMenu;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
-
 import java.util.List;
 
 public interface DataCobaRepo extends JpaRepository<DataCoba, Long> {
@@ -23,12 +20,5 @@ public interface DataCobaRepo extends JpaRepository<DataCoba, Long> {
 
     public Page<DataCoba> findByNamaDepanContainsIgnoreCase(Pageable pageable, String value);
     public List<DataCoba> findByNamaDepanContainsIgnoreCase(String value);
-
-    
-
-
-
-
-
 
 }

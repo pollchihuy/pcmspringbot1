@@ -1,25 +1,49 @@
 package com.example.pcmspringbot1.model;
 
+import jakarta.persistence.*;
 import java.util.Date;
+import java.util.List;
 
-/*
-IntelliJ IDEA 2024.1.4 (Ultimate Edition)
-Build #IU-241.18034.62, built on June 21, 2024
-@Author pollc a.k.a. Paul Christian
-Java Developer
-Created on Wed 19:37
-@Last Modified Wed 19:37
-Version 1.0
-*/
+
+@Entity
+@Table(name = "MstAkses")
 public class Akses {
-    
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "IDAkses")
     private Long id;
+
+    @Column(name = "NamaAkses", nullable = false, unique = true,length = 40)
     private String nama;
 
+    @ManyToMany
+    @JoinTable(name = "MapAksesMenu",
+        uniqueConstraints = {
+                @UniqueConstraint(name = "unique-akses-menu",
+                        columnNames = {"IDAkses","IDMenu"})},
+        joinColumns = @JoinColumn(name = "IDAkses", foreignKey = @ForeignKey(name = "fk-to-map-akses")),
+        inverseJoinColumns = @JoinColumn(name = "IDMenu", foreignKey = @ForeignKey(name = "fk-to-map-menu"))
+    )
+    private List<Menu> ltMenu;
+
+    @Column(name = "CreatedBy",updatable = false,nullable = false)
     private String createdBy;
-    private Date createdDate;
-    private String modifiedBy;
-    private Date modifiedDate;
+    @Column(name = "CreatedDate",updatable = false,nullable = false)
+    private Date createdDate = new Date();
+
+    @Column(name = "UpdatedBy",insertable = false)
+    private String updatedBy;
+    @Column(name = "UpdatedDate",insertable = false)
+    private Date updatedDate;
+
+    public List<Menu> getLtMenu() {
+        return ltMenu;
+    }
+
+    public void setLtMenu(List<Menu> ltMenu) {
+        this.ltMenu = ltMenu;
+    }
 
     public Long getId() {
         return id;
@@ -53,19 +77,19 @@ public class Akses {
         this.createdDate = createdDate;
     }
 
-    public String getModifiedBy() {
-        return modifiedBy;
+    public String getUpdatedBy() {
+        return updatedBy;
     }
 
-    public void setModifiedBy(String modifiedBy) {
-        this.modifiedBy = modifiedBy;
+    public void setUpdatedBy(String updatedBy) {
+        this.updatedBy = updatedBy;
     }
 
-    public Date getModifiedDate() {
-        return modifiedDate;
+    public Date getUpdatedDate() {
+        return updatedDate;
     }
 
-    public void setModifiedDate(Date modifiedDate) {
-        this.modifiedDate = modifiedDate;
+    public void setUpdatedDate(Date updatedDate) {
+        this.updatedDate = updatedDate;
     }
 }

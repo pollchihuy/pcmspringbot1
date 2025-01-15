@@ -1,0 +1,28 @@
+DROP TRIGGER IF EXISTS batch23.trgInsertUser;
+GO
+CREATE TRIGGER batch23.trgInsertUser
+ON batch23.MstUser
+FOR INSERT
+AS
+    INSERT INTO batch23.LogUser(ID,Alamat,Email,NamaLengkap,NoHp,Password,TanggalLahir,Username,IDAccess,CreatedBy,CreatedAt,flag)
+    SELECT ID,Alamat,Email,NamaLengkap,NoHp,Password,TanggalLahir,Username,IDAccess,CreatedBy,GETDATE(),'I' FROM INSERTED; --virtual table INSERTED
+GO
+
+DROP TRIGGER IF EXISTS batch23.trgUpdateUser;
+GO
+CREATE TRIGGER batch23.trgUpdateUser
+ON batch23.MstUser
+FOR UPDATE
+AS
+    INSERT INTO batch23.LogUser(ID,Alamat,Email,NamaLengkap,NoHp,Password,TanggalLahir,Username,IDAccess,CreatedBy,CreatedAt,flag)
+    SELECT ID,Alamat,Email,NamaLengkap,NoHp,Password,TanggalLahir,Username,IDAccess,CreatedBy,GETDATE(),'U' FROM DELETED; --virtual table INSERTED
+
+GO
+DROP TRIGGER IF EXISTS batch23.trgDeleteUser;
+GO
+CREATE TRIGGER batch23.trgDeleteUser
+ON batch23.MstUser
+FOR DELETE
+AS
+    INSERT INTO batch23.LogUser(ID,Alamat,Email,NamaLengkap,NoHp,Password,TanggalLahir,Username,IDAccess,CreatedBy,CreatedAt,flag)
+    SELECT ID,Alamat,Email,NamaLengkap,NoHp,Password,TanggalLahir,Username,IDAccess,CreatedBy,GETDATE(),'D' FROM DELETED; --virtual table INSERTED

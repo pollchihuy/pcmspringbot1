@@ -1,8 +1,7 @@
 package com.example.pcmspringbot1.controller;
 
-import com.example.pcmspringbot1.dto.validasi.ValMenuDTO;
-import com.example.pcmspringbot1.model.Menu;
-import com.example.pcmspringbot1.service.MenuService;
+import com.example.pcmspringbot1.dto.validasi.ValAksesDTO;
+import com.example.pcmspringbot1.service.AksesService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -27,16 +26,16 @@ Created on Tue 20:20
 Version 1.0
 */
 @RestController
-@RequestMapping("/menu")
-public class MenuController {
+@RequestMapping("/akses")
+public class AksesController {
 
     @Autowired
-    private MenuService menuService;
+    private AksesService aksesService;
 
     Map<String,String> mapFilter = new HashMap<>();
 
 
-    public MenuController() {
+    public AksesController() {
         filterColumnByMap();
     }
 
@@ -44,32 +43,32 @@ public class MenuController {
     public ResponseEntity<Object> findAll(
             HttpServletRequest request){
         Pageable pageable = PageRequest.of(0,10, Sort.by("id"));//asc
-        return menuService.findAll(pageable,request);
+        return aksesService.findAll(pageable,request);
     }
 
     @PostMapping("")
-    public ResponseEntity<Object> save(@Valid @RequestBody ValMenuDTO menu, HttpServletRequest request){
-        return menuService.save(menuService.convertToMenu(menu),request);
+    public ResponseEntity<Object> save(@Valid @RequestBody ValAksesDTO aksesDTO, HttpServletRequest request){
+        return aksesService.save(aksesService.convertToAkses(aksesDTO),request);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Object> update(
             @PathVariable(value = "id") Long id,
-            @Valid @RequestBody ValMenuDTO menu, HttpServletRequest request){
-        return menuService.update(id,menuService.convertToMenu(menu),request);
+            @Valid @RequestBody ValAksesDTO aksesDTO, HttpServletRequest request){
+        return aksesService.update(id, aksesService.convertToAkses(aksesDTO),request);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> delete(
             @PathVariable(value = "id") Long id,
             HttpServletRequest request){
-        return menuService.delete(id,request);
+        return aksesService.delete(id,request);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Object> findById(@PathVariable(value = "id") Long id,
                                            HttpServletRequest request){
-        return menuService.findById(id,request);
+        return aksesService.findById(id,request);
     }
 
     @GetMapping("/{sort}/{sortBy}/{page}")
@@ -88,14 +87,14 @@ public class MenuController {
         }else {
             pageable = PageRequest.of(page,size, Sort.by(sortBy).descending());//asc
         }
-        return menuService.findByParam(pageable,column,value,request);
+        return aksesService.findByParam(pageable,column,value,request);
     }
 
     @PostMapping("/upload")
     public ResponseEntity<Object> uploadExcel(
             @RequestParam(value = "file") MultipartFile file,
             HttpServletRequest request){
-        return menuService.uploadDataExcel(file,request);
+        return aksesService.uploadDataExcel(file,request);
     }
 
     @GetMapping("/excel")
@@ -104,7 +103,7 @@ public class MenuController {
             @RequestParam(value = "value") String value,
             HttpServletRequest request,
             HttpServletResponse response){
-        menuService.downloadReportExcel(column,value,request,response);
+        aksesService.downloadReportExcel(column,value,request,response);
     }
 
     @GetMapping("/pdf")
@@ -114,11 +113,10 @@ public class MenuController {
             HttpServletRequest request,
             HttpServletResponse response){
 
-        menuService.generateToPDF(column,value,request,response);
+        aksesService.generateToPDF(column,value,request,response);
     }
 
     public void filterColumnByMap(){
         mapFilter.put("nama","nama");
-        mapFilter.put("group","groupMenu");
     }
 }

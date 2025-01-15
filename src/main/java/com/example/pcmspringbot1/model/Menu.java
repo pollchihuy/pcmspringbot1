@@ -4,6 +4,7 @@ package com.example.pcmspringbot1.model;
 import jakarta.persistence.*;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "MstMenu")
@@ -20,6 +21,9 @@ public class Menu {
     @Column(name = "Path",length = 40,nullable = false,unique = true)
     private String path;
 
+    @ManyToMany(mappedBy = "ltMenu")
+    private List<Akses> ltAkses;
+
     @ManyToOne
     @JoinColumn(name = "IDGroupMenu",foreignKey = @ForeignKey(name = "fk-to-group-menu"))
     private GroupMenu groupMenu;
@@ -33,6 +37,14 @@ public class Menu {
     private String updatedBy;
     @Column(name = "UpdatedDate",insertable = false)
     private Date updatedDate;
+
+    public List<Akses> getLtAkses() {
+        return ltAkses;
+    }
+
+    public void setLtAkses(List<Akses> ltAkses) {
+        this.ltAkses = ltAkses;
+    }
 
     public Long getId() {
         return id;

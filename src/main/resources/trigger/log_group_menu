@@ -1,0 +1,28 @@
+DROP TRIGGER IF EXISTS batch23.trgInsertGroupMenu;
+GO
+CREATE TRIGGER batch23.trgInsertGroupMenu
+ON batch23.MstGroupMenu
+FOR INSERT
+AS
+    INSERT INTO batch23.LogGroupMenu(IDGroupMenu,NamaGroupMenu,CreatedBy,CreatedDate,flag)
+    SELECT IDGroupMenu,NamaGroupMenu,CreatedBy,GETDATE(),'I' FROM INSERTED; --virtual table INSERTED
+GO
+
+DROP TRIGGER IF EXISTS batch23.trgUpdateGroupMenu;
+GO
+CREATE TRIGGER batch23.trgUpdateGroupMenu
+ON batch23.MstGroupMenu
+FOR UPDATE
+AS
+    INSERT INTO batch23.LogGroupMenu(IDGroupMenu,NamaGroupMenu,CreatedBy,CreatedDate,flag)
+    SELECT IDGroupMenu,NamaGroupMenu,(SELECT UpdatedBy From INSERTED),GETDATE(),'U' FROM DELETED; --virtual table INSERTED
+
+GO
+DROP TRIGGER IF EXISTS batch23.trgDeleteGroupMenu;
+GO
+CREATE TRIGGER batch23.trgDeleteGroupMenu
+ON batch23.MstGroupMenu
+FOR DELETE
+AS
+    INSERT INTO batch23.LogGroupMenu(IDGroupMenu,NamaGroupMenu,CreatedBy,CreatedDate,flag)
+		SELECT IDGroupMenu,NamaGroupMenu,(SELECT SUSER_NAME()),GETDATE(),'D' FROM DELETED; --virtual table INSERTED

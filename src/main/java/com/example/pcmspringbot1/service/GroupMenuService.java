@@ -7,7 +7,9 @@ import com.example.pcmspringbot1.dto.response.RespGroupMenuDTO;
 import com.example.pcmspringbot1.dto.validasi.ValGroupMenuDTO;
 import com.example.pcmspringbot1.handler.ResponseHandler;
 import com.example.pcmspringbot1.model.GroupMenu;
+import com.example.pcmspringbot1.model.LogGroupMenu;
 import com.example.pcmspringbot1.repo.GroupMenuRepo;
+import com.example.pcmspringbot1.repo.LogGroupMenuRepo;
 import com.example.pcmspringbot1.util.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -39,6 +41,9 @@ public class GroupMenuService implements IService<GroupMenu>, IReportForm<GroupM
     private GroupMenuRepo groupMenuRepo;
 
     @Autowired
+    private LogGroupMenuRepo logGroupMenuRepo;
+
+    @Autowired
     private ModelMapper modelMapper ;
 
     @Autowired
@@ -61,7 +66,14 @@ public class GroupMenuService implements IService<GroupMenu>, IReportForm<GroupM
             }
             groupMenu.setCreatedBy("Paul");
             groupMenu.setCreatedDate(new Date());
-            groupMenuRepo.save(groupMenu);
+            GroupMenu g = groupMenuRepo.save(groupMenu);
+
+            LogGroupMenu logGroupMenu = new LogGroupMenu();
+            logGroupMenu.setIdGroupMenu(g.getId());
+            logGroupMenu.setNama(g.getNama());
+            logGroupMenu.setCreatedBy(g.getCreatedBy());
+            logGroupMenu.setCreatedDate(new Date());
+            logGroupMenuRepo.save(logGroupMenu);
 
         }catch (Exception e){
             LoggingFile.logException("GroupMenuService","save --> Line 42",e, OtherConfig.getEnableLogFile());
