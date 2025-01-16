@@ -53,10 +53,10 @@ public class MainMain {
 //        $2a$11$iE9PbKkW8a4WmcXgrcoxkOIZIDh9SAdCZyDHHkD7IZibnqFvC/N6K
 //        System.out.println(BcryptImpl.hash("Paul@123"));
 //        System.out.println(BcryptImpl.verifyHash("Paul@123","$2a$11$iE9PbKkW8a4WmcXgrcoxkOIZIDh9SAdCZyDHHkD7IZibnqFvC/N6K"));
-        System.out.println(UUID.randomUUID());
+//        System.out.println(UUID.randomUUID());
 //        bf468c1c-cbfb-4f61-91a2-d97e1d420445
 //        4ac72658-d4a0-4f5b-9ee4-1926593d2c1b
-        int intX = 1/0;//SQLException queue
+//        int intX = 1/0;//SQLException queue
 //        3
 //API 1
 //API 2
@@ -68,7 +68,25 @@ public class MainMain {
 //        LinkedList
 //        List
 
-        ArrayList<String> list = new ArrayList<>();
-        List<String> l = new ArrayList<>();
+//        ArrayList<String> list = new ArrayList<>();
+//        List<String> l = new ArrayList<>();
+//        System.out.println(System.currentTimeMillis());
+
+        System.out.println("APP1.INFO."+System.currentTimeMillis());
+        System.out.println(Crypto.performEncrypt("APP1.INFO.1737034153823"));
+        String [] strToken = Crypto.performDecrypt("98c07f9fea7345d1135ee779a3769d5c7f4087095ab06e5f7a033732b4a1e04e").split("\\.");
+        if(strToken.length != 3){
+            return;
+        }
+        if(!strToken[0].equals("APP1")){
+
+        }
+        if(!strToken[1].equals("INFO")){
+
+        }
+        System.out.println(((System.currentTimeMillis()-Long.parseLong(strToken[2]))/1000)-120);
+        if((((System.currentTimeMillis()-Long.parseLong(strToken[2]))/1000)-300)>0){
+
+        }
     }
 }

@@ -10,11 +10,10 @@ Created on Fri 20:12
 Version 1.0
 */
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.Date;
 
 /**
@@ -43,20 +42,83 @@ import java.util.Date;
  * private String password;
  *     private String email;
  */
+@Entity
+@Table(name = "MstUser")
 public class User {
 
+    @Id
+    @Column(name = "IDUser")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String username;
-    private String password;
-    private String email;
-    private String alamat;
-    private String noHp;
-    private Akses akses;
-    private String createdBy;
-    private Date createdDate;
-    private String modifiedBy;
-    private Date modifiedDate;
 
+    @Column(name = "username",length = 40,nullable = false,unique = true)
+    private String username;
+
+    @Column(name = "Password",length = 60,nullable = false,unique = true)
+    private String password;
+    @Column(name = "Email",length = 64,nullable = false,unique = true)
+    private String email;
+    @Column(name = "Alamat",length = 255,nullable = false)
+    private String alamat;
+    @Column(name = "NoHp",length = 16,nullable = false,unique = true)
+    private String noHp;
+    @Column(name = "Nama" , length = 50, nullable = false)
+    private String nama;
+
+    @Column(name = "TanggalLahir")
+    private LocalDate tanggalLahir;
+
+    @Transient
+    private Integer umur;
+
+    @ManyToOne
+    @JoinColumn(name = "IDAkses",foreignKey = @ForeignKey(name = "fk-user-to-akses"))
+    private Akses akses;
+    
+    @Column(name = "OTP",length = 60)
+    private String otp;
+
+    @Column(name = "CreatedBy",updatable = false,nullable = false)
+    private String createdBy;
+    @Column(name = "CreatedDate",updatable = false,nullable = false)
+    private Date createdDate = new Date();
+
+    @Column(name = "UpdatedBy",insertable = false)
+    private String updatedBy;
+    @Column(name = "UpdatedDate",insertable = false)
+    private Date updatedDate;
+
+    public String getOtp() {
+        return otp;
+    }
+
+    public void setOtp(String otp) {
+        this.otp = otp;
+    }
+
+    public LocalDate getTanggalLahir() {
+        return tanggalLahir;
+    }
+
+    public void setTanggalLahir(LocalDate tanggalLahir) {
+        this.tanggalLahir = tanggalLahir;
+    }
+
+    public Integer getUmur() {
+        return Period.between(tanggalLahir,LocalDate.now()).getYears();
+    }
+
+    public void setUmur(Integer umur) {
+        this.umur = umur;
+    }
+
+    public String getNama() {
+        return nama;
+    }
+
+    public void setNama(String nama) {
+        this.nama = nama;
+    }
 
     public Long getId() {
         return id;
@@ -130,19 +192,19 @@ public class User {
         this.createdDate = createdDate;
     }
 
-    public String getModifiedBy() {
-        return modifiedBy;
+    public String getUpdatedBy() {
+        return updatedBy;
     }
 
-    public void setModifiedBy(String modifiedBy) {
-        this.modifiedBy = modifiedBy;
+    public void setUpdatedBy(String updatedBy) {
+        this.updatedBy = updatedBy;
     }
 
-    public Date getModifiedDate() {
-        return modifiedDate;
+    public Date getUpdatedDate() {
+        return updatedDate;
     }
 
-    public void setModifiedDate(Date modifiedDate) {
-        this.modifiedDate = modifiedDate;
+    public void setUpdatedDate(Date updatedDate) {
+        this.updatedDate = updatedDate;
     }
 }

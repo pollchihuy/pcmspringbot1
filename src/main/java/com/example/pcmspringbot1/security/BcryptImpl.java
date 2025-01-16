@@ -23,7 +23,9 @@ public class BcryptImpl {
     
     public static void main(String[] args) {
         String strUserName = "Paul@123";
-
+        System.out.println(hash(strUserName).length());
+        strUserName = "Paul@123456789";
+        System.out.println(hash(strUserName).length());
 //        for (int i = 0; i < 2; i++) {
 //            System.out.println("Hash Ke "+(i+1)+" : " +hash(strUserName));
 //        }
