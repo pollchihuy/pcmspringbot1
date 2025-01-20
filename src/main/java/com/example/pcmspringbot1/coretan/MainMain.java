@@ -5,6 +5,7 @@ import com.example.pcmspringbot1.security.Crypto;
 
 import java.sql.Array;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 
@@ -88,5 +89,14 @@ public class MainMain {
         if((((System.currentTimeMillis()-Long.parseLong(strToken[2]))/1000)-300)>0){
 
         }
+        String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzY29wZSI6Im9wZW5pZCBlbWFpbCBwcm9maWxlIiwibmFtZSI6IkFkbWluIE11bmljIiwiZW1haWwiOiJ1c2VyLnBhdWxAbWNwLmlkIiwibXNpc2RuIjoiMDg1MzM5ODEzOTkzICAgICAgICAgICAgICAgICAgICAiLCJpZCI6MTE1LCJyb2xlIjoib3duZXIiLCJvd25lcl9jb2RlIjoiNjI2NS4xLjEiLCJwcm9maWxlX3Bob3RvX3BhdGgiOiJodHRwczpcL1wvc3RhdGljLm1jcC5pZFwvY29udGVudF9maWxlX3VwbG9hZFwvYXZhdGFyc1wvMTcyODYzOTUwMy5qcGciLCJzZXNzaW9uX3N0YXRlIjoiNjc4ZGYzYmFiNjkwZSIsImV4cGlyZSI6IjIwMjUtMDEtMjEgMTM6NTY6NTgiLCJhY2Nlc3Nfcm9sZSI6eyJuYW1lIjoib3duZXIiLCJkYXNoYm9hcmQiOiIxIiwiZmxlZXRfbWFuYWdlbWVudCI6IjEiLCJjcmV3X21hbmFnZW1lbnQiOiIxIiwiZG9jX21hbmFnZW1lbnQiOiIxIiwic2VtYXIiOiIxIiwiY29tcGFueSI6IjEiLCJpbmZvcm1hdGlvbiI6IjEiLCJtYXN0ZXJfZGF0YSI6IjEiLCJzdXBwb3J0IjoiMSIsImZhcSI6IjEifX0.XqEbZOMJMtWnn3rHi9Sl3_fgoRAk3YV2rXe6a3d4Xd";
+        String[] chunks = token.split("\\.");
+        Base64.Decoder decoder = Base64.getUrlDecoder();
+
+        String header = new String(decoder.decode(chunks[0]));
+        String payload = new String(decoder.decode(chunks[1]));
+        String signature = new String(decoder.decode("XqEbZOMJMtWnn3rHi9Sl3_fgoRAk3YV2rXe6a3d4Xd"));
+        System.out.println(signature);
+
     }
 }

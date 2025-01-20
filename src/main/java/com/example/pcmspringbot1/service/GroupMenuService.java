@@ -179,7 +179,7 @@ public class GroupMenuService implements IService<GroupMenu>, IReportForm<GroupM
     public ResponseEntity<Object> uploadDataExcel(MultipartFile multipartFile, HttpServletRequest request) {
 
         String message = "";
-        if(ExcelReader.hasWorkBookFormat(multipartFile)){
+        if(!ExcelReader.hasWorkBookFormat(multipartFile)){
             return GlobalResponse.formatHarusExcel(request);
         }
 
@@ -291,8 +291,8 @@ public class GroupMenuService implements IService<GroupMenu>, IReportForm<GroupM
         }
         Map<String,Object> mapTemp = null;
         List<Map<String,Object>> listMap = new ArrayList<>();
-        for(int i=0;i<listTemp.size();i++){
-            mapTemp = GlobalFunction.convertClassToObject(groupMenuList.get(i));
+        for(int i=0;i<respGroupMenuDTOList.size();i++){
+            mapTemp = GlobalFunction.convertClassToObject(respGroupMenuDTOList.get(i));
             listMap.add(mapTemp);
         }
 

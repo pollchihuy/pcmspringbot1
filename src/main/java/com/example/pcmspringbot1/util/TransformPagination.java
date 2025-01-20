@@ -16,12 +16,14 @@ public class TransformPagination {
 
     private String sortByColumn;
     private String sort;
+    String [] sortArr = new String [2];
 
     public Map<String,Object> transformPagination(List ls, Page page, String column, String value) {
-        sortByColumn = page.getSort().toString().split(":")[0];
+        sortArr = page.getSort().toString().split(":");
+        sortByColumn = sortArr[0];
         Boolean isSorted = sortByColumn.equals("UNSORTED");
         sortByColumn = isSorted?"id":sortByColumn;
-        sort = isSorted?"asc":"desc";
+        sort = isSorted?"asc":sortArr[1];
         Map<String,Object> map = new HashMap<>();
         map.put("content",ls);
         map.put("total-data",page.getTotalElements());

@@ -17,15 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.HashMap;
 import java.util.Map;
 
-/*
-IntelliJ IDEA 2024.1.4 (Ultimate Edition)
-Build #IU-241.18034.62, built on June 21, 2024
-@Author pollc a.k.a. Paul Christian
-Java Developer
-Created on Tue 20:20
-@Last Modified Tue 20:20
-Version 1.0
-*/
 @RestController
 @RequestMapping("/akses")
 public class AksesController {
@@ -41,6 +32,7 @@ public class AksesController {
     }
 
     @GetMapping("")
+    @PreAuthorize("hasAuthority('Akses')")
     public ResponseEntity<Object> findAll(
             HttpServletRequest request){
         Pageable pageable = PageRequest.of(0,10, Sort.by("id"));//asc
@@ -48,11 +40,13 @@ public class AksesController {
     }
 
     @PostMapping("")
+    @PreAuthorize("hasAuthority('Akses')")
     public ResponseEntity<Object> save(@Valid @RequestBody ValAksesDTO aksesDTO, HttpServletRequest request){
         return aksesService.save(aksesService.convertToAkses(aksesDTO),request);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('Akses')")
     public ResponseEntity<Object> update(
             @PathVariable(value = "id") Long id,
             @Valid @RequestBody ValAksesDTO aksesDTO, HttpServletRequest request){
@@ -60,6 +54,7 @@ public class AksesController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('Akses')")
     public ResponseEntity<Object> delete(
             @PathVariable(value = "id") Long id,
             HttpServletRequest request){
@@ -73,6 +68,7 @@ public class AksesController {
     }
 
     @GetMapping("/{sort}/{sortBy}/{page}")
+    @PreAuthorize("hasAuthority('Akses')")
     public ResponseEntity<Object> findByParam(
             @PathVariable(value = "sort") String sort,
             @PathVariable(value = "sortBy") String sortBy,//name
@@ -92,6 +88,7 @@ public class AksesController {
     }
 
     @PostMapping("/upload")
+    @PreAuthorize("hasAuthority('Akses')")
     public ResponseEntity<Object> uploadExcel(
             @RequestParam(value = "file") MultipartFile file,
             HttpServletRequest request){
@@ -99,6 +96,7 @@ public class AksesController {
     }
 
     @GetMapping("/excel")
+    @PreAuthorize("hasAuthority('Akses')")
     public void download(
             @RequestParam(value = "column") String column,
             @RequestParam(value = "value") String value,
@@ -108,6 +106,7 @@ public class AksesController {
     }
 
     @GetMapping("/pdf")
+    @PreAuthorize("hasAuthority('Akses')")
     public void downloadReportPDFMenu(
             @RequestParam(value = "column") String column,
             @RequestParam(value = "value") String value,

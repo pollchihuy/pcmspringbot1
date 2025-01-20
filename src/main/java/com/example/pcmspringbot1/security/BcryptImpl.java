@@ -22,10 +22,12 @@ public class BcryptImpl {
     }
     
     public static void main(String[] args) {
+//        String strUserName = "paul123Paul@123";
         String strUserName = "Paul@123";
+        System.out.println(hash(strUserName));
+//        strUserName = "Paul@123456789";
         System.out.println(hash(strUserName).length());
-        strUserName = "Paul@123456789";
-        System.out.println(hash(strUserName).length());
+        System.out.println(verifyHash("paul123Paul@123","$2a$11$udu1/4a6//OCjiDxNrrwY.HJb4N.mC/zTCKbmlYbHkgB53q5Y/uMi"));
 //        for (int i = 0; i < 2; i++) {
 //            System.out.println("Hash Ke "+(i+1)+" : " +hash(strUserName));
 //        }

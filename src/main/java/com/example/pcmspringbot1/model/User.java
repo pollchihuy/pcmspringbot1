@@ -11,10 +11,20 @@ Version 1.0
 */
 
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+//import org.springframework.security.core.GrantedAuthority;
+//import org.springframework.security.core.authority.SimpleGrantedAuthority;
+//import org.springframework.security.core.userdetails.UserDetails;
+//import java.time.LocalDate;
+//import java.time.Period;
+//import java.util.*;
 
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.Date;
+import java.util.*;
 
 /**
  *  Login -
@@ -44,7 +54,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "MstUser")
-public class User {
+public class User implements UserDetails {
 
     @Id
     @Column(name = "IDUser")
@@ -71,6 +81,10 @@ public class User {
     @Transient
     private Integer umur;
 
+    /** ubah saat migrasi DB */
+    @Column(name = "IsRegistered",columnDefinition = ("bit default 0"))
+    private Boolean isRegistered=false;
+
     @ManyToOne
     @JoinColumn(name = "IDAkses",foreignKey = @ForeignKey(name = "fk-user-to-akses"))
     private Akses akses;
@@ -87,6 +101,45 @@ public class User {
     private String updatedBy;
     @Column(name = "UpdatedDate",insertable = false)
     private Date updatedDate;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        List<Menu> lt = this.akses.getLtMenu();
+        Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
+        for (Menu menu :
+             lt) {
+            grantedAuthorities.add(new SimpleGrantedAuthority(menu.getNama()));
+        }
+        return grantedAuthorities;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return UserDetails.super.isAccountNonExpired();
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return UserDetails.super.isAccountNonLocked();
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return UserDetails.super.isCredentialsNonExpired();
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return UserDetails.super.isEnabled();
+    }
+
+    public Boolean getRegistered() {
+        return isRegistered;
+    }
+
+    public void setRegistered(Boolean registered) {
+        isRegistered = registered;
+    }
 
     public String getOtp() {
         return otp;

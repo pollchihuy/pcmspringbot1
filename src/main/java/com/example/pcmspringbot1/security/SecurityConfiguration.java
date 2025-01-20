@@ -50,6 +50,7 @@ public class SecurityConfiguration {
                         request -> request
                                 .requestMatchers(
                                         "/auth/**",
+                                        "/contoh/**",
                                         "/artikel/**",
                                         "/swagger-ui/**",
                                         "/v3/api-docs/**")

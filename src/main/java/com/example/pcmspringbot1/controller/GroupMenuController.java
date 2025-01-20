@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -41,6 +42,7 @@ public class GroupMenuController {
     }
 
     @GetMapping("")
+    @PreAuthorize("hasAuthority('Group-Menu')")
     public ResponseEntity<Object> findAll(
             HttpServletRequest request){
         Pageable pageable = PageRequest.of(0,10, Sort.by("id"));//asc
@@ -48,11 +50,13 @@ public class GroupMenuController {
     }
 
     @PostMapping("")
+    @PreAuthorize("hasAuthority('Group-Menu')")
     public ResponseEntity<Object> save(@Valid @RequestBody ValGroupMenuDTO groupMenu, HttpServletRequest request){
         return groupMenuService.save(groupMenuService.convertToListRespGroupMenuDTO(groupMenu), request);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('Group-Menu')")
     public ResponseEntity<Object> update(
             @PathVariable(value = "id") Long id,
             @Valid @RequestBody ValGroupMenuDTO groupMenu, HttpServletRequest request){
@@ -60,6 +64,7 @@ public class GroupMenuController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('Group-Menu')")
     public ResponseEntity<Object> delete(
             @PathVariable(value = "id") Long id,
             HttpServletRequest request){
@@ -67,12 +72,14 @@ public class GroupMenuController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('Group-Menu')")
     public ResponseEntity<Object> findById(@PathVariable(value = "id") Long id,
                                            HttpServletRequest request){
         return groupMenuService.findById(id,request);
     }
 
     @GetMapping("/{sort}/{sortBy}/{page}")
+    @PreAuthorize("hasAuthority('Group-Menu')")
     public ResponseEntity<Object> findByParam(
             @PathVariable(value = "sort") String sort,
             @PathVariable(value = "sortBy") String sortBy,//name
@@ -92,6 +99,7 @@ public class GroupMenuController {
     }
 
     @PostMapping("/upload")
+    @PreAuthorize("hasAuthority('Group-Menu')")
     public ResponseEntity<Object> uploadExcel(
             @RequestParam(value = "file") MultipartFile file,
             HttpServletRequest request){
@@ -99,6 +107,7 @@ public class GroupMenuController {
     }
 
     @GetMapping("/excel")
+    @PreAuthorize("hasAuthority('Group-Menu')")
     public void download(
             @RequestParam(value = "column") String column,
             @RequestParam(value = "value") String value,
@@ -108,6 +117,7 @@ public class GroupMenuController {
     }
 
     @GetMapping("/pdf")
+    @PreAuthorize("hasAuthority('Group-Menu')")
     public void downloadReportPDFGroupMenu(
             @RequestParam(value = "column") String column,
             @RequestParam(value = "value") String value,

@@ -56,11 +56,12 @@ public class AksesService implements IService<Akses>, IReportForm<Akses> {
 
     @Override
     public ResponseEntity<Object> save(Akses akses, HttpServletRequest request) {
+        Map<String,Object> token = GlobalFunction.extractToken(request);
         try{
             if(akses==null){
                 return GlobalResponse.dataTidakValid("FVAUT03001",request);
             }
-            akses.setCreatedBy("Paul");
+            akses.setCreatedBy(token.get("nm").toString());
             akses.setCreatedDate(new Date());
             akses.setLtMenu(akses.getLtMenu());
 
@@ -76,6 +77,7 @@ public class AksesService implements IService<Akses>, IReportForm<Akses> {
     @Override
     @Transactional
     public ResponseEntity<Object> update(Long id, Akses akses, HttpServletRequest request) {
+        Map<String,Object> token = GlobalFunction.extractToken(request);
         try{
             if(akses==null){
                 return GlobalResponse.dataTidakValid("FVAUT03011",request);
@@ -85,7 +87,7 @@ public class AksesService implements IService<Akses>, IReportForm<Akses> {
                 return GlobalResponse.dataTidakDitemukan(request);
             }
             Akses aksesDB = aksesOptional.get();
-            aksesDB.setUpdatedBy("Reksa");
+            aksesDB.setUpdatedBy(token.get("userId").toString());
             aksesDB.setUpdatedDate(new Date());
             aksesDB.setNama(akses.getNama());
             aksesDB.setLtMenu(akses.getLtMenu());
@@ -100,6 +102,7 @@ public class AksesService implements IService<Akses>, IReportForm<Akses> {
     @Override
     @Transactional
     public ResponseEntity<Object> delete(Long id, HttpServletRequest request) {
+        Map<String,Object> token = GlobalFunction.extractToken(request);
         try{
             Optional<Akses> aksesOptional = aksesRepo.findById(id);
             if(!aksesOptional.isPresent()){
@@ -168,7 +171,7 @@ public class AksesService implements IService<Akses>, IReportForm<Akses> {
 
     @Override
     public ResponseEntity<Object> uploadDataExcel(MultipartFile multipartFile, HttpServletRequest request) {
-
+        Map<String,Object> token = GlobalFunction.extractToken(request);
         String message = "";
         if(ExcelReader.hasWorkBookFormat(multipartFile)){
             return GlobalResponse.formatHarusExcel(request);
@@ -181,7 +184,7 @@ public class AksesService implements IService<Akses>, IReportForm<Akses> {
                     return GlobalResponse.dataFileKosong(request);
                 }
             }
-            aksesRepo.saveAll(convertListWorkBookToListEntity(lt,1L));
+            aksesRepo.saveAll(convertListWorkBookToListEntity(lt,Long.parseLong(token.get("userId").toString())));
         }catch (Exception e){
             LoggingFile.logException("AksesService","upload excel --> Line 213",e, OtherConfig.getEnableLogFile());
             return GlobalResponse.fileExcelGagalDiproses("FEAUT03061",request);
@@ -256,6 +259,7 @@ public class AksesService implements IService<Akses>, IReportForm<Akses> {
 
     @Override
     public void generateToPDF(String column, String value, HttpServletRequest request, HttpServletResponse response) {
+        Map<String,Object> token = GlobalFunction.extractToken(request);
         List<Akses> menuList = null;
         switch (column){
             case "nama":menuList= aksesRepo.findByNamaContainsIgnoreCase(value);break;
@@ -295,7 +299,7 @@ public class AksesService implements IService<Akses>, IReportForm<Akses> {
         map.put("timestamp",new Date());
         map.put("totalData",intRespGroupAksesDTOList);
         map.put("listContent",listMap);
-        map.put("username","Paul");
+        map.put("username",token.get("namaLengkap"));
         context.setVariables(map);
         strHtml = springTemplateEngine.process("global-report",context);
         pdfGenerator.htmlToPdf(strHtml,"akses",response);

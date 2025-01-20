@@ -11,9 +11,13 @@ Version 1.0
 */
 
 import com.example.pcmspringbot1.config.CobaConfig;
+import com.example.pcmspringbot1.security.JwtUtility;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -22,7 +26,7 @@ public class GlobalFunction {
 
     public String ok;
 
-    public  static void print(Object obj){
+   public  static void print(Object obj){
         if(CobaConfig.getStrCoba().equals("y")){
             System.out.println(obj);
         }
@@ -58,5 +62,11 @@ public class GlobalFunction {
         }
 
         return sb.toString();
+    }
+
+    public static Map<String,Object> extractToken(HttpServletRequest request){
+        String token = request.getHeader("Authorization");
+        token = token.substring(7);
+        return new JwtUtility().mappingBodyToken(token , new HashMap<>());
     }
 }

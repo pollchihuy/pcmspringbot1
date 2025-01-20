@@ -1,7 +1,6 @@
 package com.example.pcmspringbot1.dto.validasi;
 
 
-import com.example.pcmspringbot1.dto.response.RespAksesDTO;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -15,7 +14,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
-public class ValUserDTO {
+public class ValRegisDTO {
 
     @NotNull
     @NotBlank
@@ -27,8 +26,8 @@ public class ValUserDTO {
     @NotNull
     @NotBlank
     @NotEmpty
-    @Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[_#\\-$])[\\w].{8,15}$",
-            message = "Format minimal 1 angka, 1 huruf kecil, 1 huruf besar, 1 spesial karakter (_ \"Underscore\", - \"Hyphen\", # \"Hash\", atau $ \"Dollar\") setelah 4 kondisi min 9 max 16 alfanumerik, contoh : aB4$12345")
+    @Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[@_#\\-$])[\\w].{8,15}$",
+            message = "Format minimal 1 angka, 1 huruf kecil, 1 huruf besar, 1 spesial karakter (_ \"Underscore\", - \"Hyphen\", # \"Hash\", atau $ \"Dollar\" atau @ \"At\") setelah 4 kondisi min 9 max 16 alfanumerik, contoh : aB4$12345")
     private String password;
 
     @NotNull
@@ -49,6 +48,7 @@ public class ValUserDTO {
     @NotEmpty
     @Pattern(regexp = "^(62|\\+62|0)8[0-9]{9,13}$",
             message = "Format No HP Tidak Valid , min 9 max 13 setelah angka 8, contoh : (0/62/+62)81111111")
+    @JsonProperty("no-hp")
     private String noHp;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -58,7 +58,18 @@ public class ValUserDTO {
     private LocalDate tanggalLahir;
 
     @NotNull
-    private RespAksesDTO akses;
+    @NotBlank
+    @NotEmpty
+    @Pattern(regexp = "^[a-zA-Z\\s]{4,25}$",message = "Hanya Alfabet dan spasi Minimal 4 Maksimal 25")
+    private String nama;
+
+    public  String getNama() {
+        return nama;
+    }
+
+    public void setNama(String nama) {
+        this.nama = nama;
+    }
 
     public LocalDate getTanggalLahir() {
         return tanggalLahir;
@@ -106,13 +117,5 @@ public class ValUserDTO {
 
     public void setNoHp(String noHp) {
         this.noHp = noHp;
-    }
-
-    public RespAksesDTO getAkses() {
-        return akses;
-    }
-
-    public void setAkses(RespAksesDTO akses) {
-        this.akses = akses;
     }
 }
