@@ -171,7 +171,7 @@ public class MenuService implements IService<Menu>, IReportForm<Menu> {
     public ResponseEntity<Object> uploadDataExcel(MultipartFile multipartFile, HttpServletRequest request) {
 
         String message = "";
-        if(ExcelReader.hasWorkBookFormat(multipartFile)){
+        if(!ExcelReader.hasWorkBookFormat(multipartFile)){
             return GlobalResponse.formatHarusExcel(request);
         }
 
@@ -197,6 +197,7 @@ public class MenuService implements IService<Menu>, IReportForm<Menu> {
             Map<String, String> map = workBookData.get(i);
             Menu menu = new Menu();
             menu.setNama(map.get("nama-menu"));
+            menu.setPath(map.get("path"));
             menu.setCreatedBy(String.valueOf(userId));
             menu.setCreatedDate(new Date());
             list.add(menu);
@@ -285,7 +286,7 @@ public class MenuService implements IService<Menu>, IReportForm<Menu> {
         }
         Map<String,Object> mapTemp = null;
         List<Map<String,Object>> listMap = new ArrayList<>();
-        for(int i=0;i<listTemp.size();i++){
+        for(int i=0;i<menuList.size();i++){
             mapTemp = GlobalFunction.convertClassToObject(menuList.get(i));
             listMap.add(mapTemp);
         }

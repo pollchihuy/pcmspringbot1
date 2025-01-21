@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface MenuRepo extends JpaRepository<Menu,Long> {
 
@@ -23,4 +24,6 @@ public interface MenuRepo extends JpaRepository<Menu,Long> {
 
     @Query(value = "SELECT m FROM Menu m WHERE lower(m.groupMenu.nama) LIKE lower(concat('%',?1,'%'))")
     public List<Menu> cariGroupMenu(String nama);
+
+    public Optional<Menu> findTopByOrderByIdDesc();
 }
