@@ -112,11 +112,13 @@ public class AppUserDetailService implements UserDetailsService {
                             HttpStatus.BAD_REQUEST,
                             null,"X01008",request);
                 }else{
+                    /** PERNAH REGISTRASI TAPI BELUM SELESAI */
                     userDB.setAlamat(user.getAlamat());
                     userDB.setNoHp(user.getNoHp());
                     userDB.setEmail(user.getEmail());
                     userDB.setNama(user.getNama());
                     userDB.setNoHp(user.getNoHp());
+                    userDB.setPassword(BcryptImpl.hash(user.getUsername()+user.getPassword()));
                     userDB.setTanggalLahir(user.getTanggalLahir());
                     userDB.setUpdatedBy(userDB.getNama());
                     userDB.setUpdatedDate(new Date());
@@ -128,6 +130,7 @@ public class AppUserDetailService implements UserDetailsService {
         }else {
             user.setCreatedBy("Paul");
             user.setCreatedDate(new Date());
+            user.setPassword(BcryptImpl.hash(user.getUsername()+user.getPassword()));
             otp = random.nextInt(111111,999999);
             user.setOtp(BcryptImpl.hash(String.valueOf(otp)));
             user.setAkses(akses);
