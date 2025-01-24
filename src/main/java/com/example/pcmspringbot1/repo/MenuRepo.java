@@ -19,10 +19,10 @@ public interface MenuRepo extends JpaRepository<Menu,Long> {
     // UNTUK REPORT
     public List<Menu> findByNamaContainsIgnoreCase(String nama);
 
-    @Query(value = "SELECT m FROM Menu m WHERE lower(m.groupMenu.nama) LIKE lower(concat('%',?1,'%'))")
+    @Query(value = "SELECT m FROM Menu m WHERE lower(m.groupMenu.namaGroupMenu) LIKE lower(concat('%',?1,'%'))")
     public Page<Menu> cariGroupMenu(Pageable pageable, String nama);
 
-    @Query(value = "SELECT m FROM Menu m WHERE lower(m.groupMenu.nama) LIKE lower(concat('%',?1,'%'))")
+    @Query(value = "SELECT m FROM Menu m WHERE lower(m.groupMenu.namaGroupMenu) LIKE lower(concat('%',?1,'%'))")
     public List<Menu> cariGroupMenu(String nama);
 
     public Optional<Menu> findTopByOrderByIdDesc();

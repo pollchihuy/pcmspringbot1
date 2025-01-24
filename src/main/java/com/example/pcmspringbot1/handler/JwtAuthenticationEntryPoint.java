@@ -29,6 +29,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 		data.put("status", false);
 		data.put("timestamp", Calendar.getInstance().getTime());
 		data.put("error", e.getMessage());
+//		data.put("error", "Lakukan Otentikasi Terlebih Dahulu !!");
 		response.getOutputStream().println(mapper.writeValueAsString(data));
 	}
 }

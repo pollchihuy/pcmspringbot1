@@ -112,7 +112,7 @@ public class GroupMenuControllerTest extends AbstractTestNGSpringContextTests {
          * NAMA NYA SESUAI DENGAN YANG DIUBAH
          */
         String reqNama = dataGenerator.dataNamaTim();
-        groupMenu.setNama(reqNama);
+        groupMenu.setNamaGroupMenu(reqNama);
         req.put("nama",reqNama);
         RequestSpecification httpRequest = given().
                 header("Content-Type","application/json").
@@ -158,7 +158,7 @@ public class GroupMenuControllerTest extends AbstractTestNGSpringContextTests {
         status = Integer.parseInt(jPath.getString("status")==null?"0":jPath.getString("status"));
         success = Boolean.parseBoolean(jPath.getString("success"));
         Assert.assertEquals(responseCode,200);
-        Assert.assertEquals(nama,groupMenu.getNama());
+        Assert.assertEquals(nama,groupMenu.getNamaGroupMenu());
         Assert.assertEquals(id,groupMenu.getId());
         Assert.assertEquals(status,200);
         Assert.assertEquals(success,true);
@@ -191,7 +191,7 @@ public class GroupMenuControllerTest extends AbstractTestNGSpringContextTests {
         Integer totalData = Integer.parseInt(jPath.getString("data.total-data"));
         String value = jPath.getString("data.value");
         System.out.println("GET ID : "+groupMenu.getId());
-        System.out.println("GET NAME : "+groupMenu.getNama());
+        System.out.println("GET NAME : "+groupMenu.getNamaGroupMenu());
 
         Assert.assertEquals(responseCode,200);
         Assert.assertEquals(status,200);
@@ -236,7 +236,7 @@ public class GroupMenuControllerTest extends AbstractTestNGSpringContextTests {
                 header("accept","*/*").
                 param("column","nama").
                 header(AuthControllerTest.AUTH_HEADER,token).
-                param("value",groupMenu.getNama());
+                param("value",groupMenu.getNamaGroupMenu());
 
         String pathVariable = "/group-menu/excel";
         Response response = httpRequest.request(Method.GET, pathVariable);
@@ -257,7 +257,7 @@ public class GroupMenuControllerTest extends AbstractTestNGSpringContextTests {
                 header("accept","*/*").
                 param("column","nama").
                 header(AuthControllerTest.AUTH_HEADER,token).
-                param("value",groupMenu.getNama());
+                param("value",groupMenu.getNamaGroupMenu());
 
         String pathVariable = "/group-menu/pdf";
         Response response = httpRequest.request(Method.GET, pathVariable);

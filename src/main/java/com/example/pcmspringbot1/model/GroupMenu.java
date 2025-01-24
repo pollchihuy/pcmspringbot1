@@ -15,7 +15,7 @@ public class GroupMenu {
     private Long id;
 
     @Column(name = "NamaGroupMenu", length = 40, nullable = false, unique = true)
-    private String nama;
+    private String namaGroupMenu;
 
     @Column(name = "CreatedBy",updatable = false,nullable = false)
     private String createdBy;
@@ -35,12 +35,12 @@ public class GroupMenu {
         this.id = id;
     }
 
-    public String getNama() {
-        return nama;
+    public String getNamaGroupMenu() {
+        return namaGroupMenu;
     }
 
-    public void setNama(String nama) {
-        this.nama = nama;
+    public void setNamaGroupMenu(String namaGroupMenu) {
+        this.namaGroupMenu = namaGroupMenu;
     }
 
     public String getCreatedBy() {

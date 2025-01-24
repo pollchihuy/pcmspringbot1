@@ -1,7 +1,6 @@
 package com.example.pcmspringbot1.controller;
 
 import com.example.pcmspringbot1.dto.validasi.ValGroupMenuDTO;
-import com.example.pcmspringbot1.model.GroupMenu;
 import com.example.pcmspringbot1.service.GroupMenuService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -18,15 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.HashMap;
 import java.util.Map;
 
-/*
-IntelliJ IDEA 2024.1.4 (Ultimate Edition)
-Build #IU-241.18034.62, built on June 21, 2024
-@Author pollc a.k.a. Paul Christian
-Java Developer
-Created on Tue 20:20
-@Last Modified Tue 20:20
-Version 1.0
-*/
 @RestController
 @RequestMapping("/group-menu")
 public class GroupMenuController {

@@ -2,6 +2,8 @@ package com.example.pcmspringbot1.service;
 
 import com.example.pcmspringbot1.config.OtherConfig;
 import com.example.pcmspringbot1.core.SMTPCore;
+import com.example.pcmspringbot1.dto.response.MenuLoginDTO;
+import com.example.pcmspringbot1.dto.response.RespMenuDTO;
 import com.example.pcmspringbot1.dto.validasi.ValRegisDTO;
 import com.example.pcmspringbot1.dto.validasi.ValLoginDTO;
 import com.example.pcmspringbot1.dto.validasi.ValVerifyRegisDTO;
@@ -12,10 +14,12 @@ import com.example.pcmspringbot1.repo.UserRepo;
 import com.example.pcmspringbot1.security.BcryptImpl;
 import com.example.pcmspringbot1.security.Crypto;
 import com.example.pcmspringbot1.security.JwtUtility;
+import com.example.pcmspringbot1.util.TransformationData;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import org.aspectj.weaver.patterns.IToken;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -82,9 +86,9 @@ public class AppUserDetailService implements UserDetailsService {
         String token = jwtUtility.generateToken(userDetails,mapForJwt);
         Map<String,Object> mapResponse = new HashMap<>();
         mapResponse.put("token", Crypto.performEncrypt(token));//kalau mau di encrypt
+        List<MenuLoginDTO> ltMenu =  modelMapper.map(userDB.getAkses().getLtMenu(),new TypeToken<List<MenuLoginDTO>>(){}.getType());
 //        mapResponse.put("token",token);//kalau mau di encrypt
-        mapResponse.put("menu",null);
-
+        mapResponse.put("menu",new TransformationData().doTransformAksesMenuLogin(ltMenu));
         return ResponseEntity.status(HttpStatus.OK).body(mapResponse);
     }
 

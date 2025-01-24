@@ -70,7 +70,7 @@ public class GroupMenuService implements IService<GroupMenu>, IReportForm<GroupM
 
             LogGroupMenu logGroupMenu = new LogGroupMenu();
             logGroupMenu.setIdGroupMenu(g.getId());
-            logGroupMenu.setNama(g.getNama());
+            logGroupMenu.setNama(g.getNamaGroupMenu());
             logGroupMenu.setCreatedBy(g.getCreatedBy());
             logGroupMenu.setCreatedDate(new Date());
             logGroupMenuRepo.save(logGroupMenu);
@@ -97,7 +97,7 @@ public class GroupMenuService implements IService<GroupMenu>, IReportForm<GroupM
             GroupMenu groupMenuDB = groupMenuOptional.get();
             groupMenuDB.setUpdatedBy("Reksa");
             groupMenuDB.setUpdatedDate(new Date());
-            groupMenuDB.setNama(groupMenu.getNama());
+            groupMenuDB.setNamaGroupMenu(groupMenu.getNamaGroupMenu());
 
         }catch (Exception e){
             LoggingFile.logException("GroupMenuService","update --> Line 75",e, OtherConfig.getEnableLogFile());
@@ -163,7 +163,7 @@ public class GroupMenuService implements IService<GroupMenu>, IReportForm<GroupM
         List<GroupMenu> list = null;
         switch(columnName){
 
-            case "nama": page = groupMenuRepo.findByNamaContainsIgnoreCase(pageable,value);break;
+            case "nama": page = groupMenuRepo.findByNamaGroupMenuContainsIgnoreCase(pageable,value);break;
             default : page = groupMenuRepo.findAll(pageable);break;
         }
         list = page.getContent();
@@ -204,7 +204,7 @@ public class GroupMenuService implements IService<GroupMenu>, IReportForm<GroupM
         for (int i = 0; i < workBookData.size(); i++) {
             Map<String, String> map = workBookData.get(i);
             GroupMenu groupMenu = new GroupMenu();
-            groupMenu.setNama(map.get("nama-group-menu"));
+            groupMenu.setNamaGroupMenu(map.get("nama-group-menu"));
             groupMenu.setCreatedBy(String.valueOf(userId));
             groupMenu.setCreatedDate(new Date());
             list.add(groupMenu);
@@ -216,7 +216,7 @@ public class GroupMenuService implements IService<GroupMenu>, IReportForm<GroupM
     public void downloadReportExcel(String column, String value, HttpServletRequest request, HttpServletResponse response) {
         List<GroupMenu> groupMenuList = null;
         switch (column){
-            case "nama":groupMenuList= groupMenuRepo.findByNamaContainsIgnoreCase(value);break;
+            case "nama":groupMenuList= groupMenuRepo.findByNamaGroupMenuContainsIgnoreCase(value);break;
             default:groupMenuList= groupMenuRepo.findAll();break;
         }
         /** menggunakan response karena sama untuk report */
@@ -266,7 +266,7 @@ public class GroupMenuService implements IService<GroupMenu>, IReportForm<GroupM
     public void generateToPDF(String column, String value, HttpServletRequest request, HttpServletResponse response) {
         List<GroupMenu> groupMenuList = null;
         switch (column){
-            case "nama":groupMenuList= groupMenuRepo.findByNamaContainsIgnoreCase(value);break;
+            case "nama":groupMenuList= groupMenuRepo.findByNamaGroupMenuContainsIgnoreCase(value);break;
             default:groupMenuList= groupMenuRepo.findAll();break;
         }
         /** menggunakan response karena sama untuk report */
@@ -311,7 +311,7 @@ public class GroupMenuService implements IService<GroupMenu>, IReportForm<GroupM
     public void generateToPDFManual(String column, String value, HttpServletRequest request, HttpServletResponse response) {
         List<GroupMenu> groupMenuList = null;
         switch (column){
-            case "nama":groupMenuList= groupMenuRepo.findByNamaContainsIgnoreCase(value);break;
+            case "nama":groupMenuList= groupMenuRepo.findByNamaGroupMenuContainsIgnoreCase(value);break;
             default:groupMenuList= groupMenuRepo.findAll();break;
         }
         /** menggunakan response karena sama untuk report */
