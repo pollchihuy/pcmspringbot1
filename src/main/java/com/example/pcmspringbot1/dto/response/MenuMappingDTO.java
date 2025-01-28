@@ -1,9 +1,12 @@
 package com.example.pcmspringbot1.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class MenuMappingDTO {
 
     private String nama;
     private String path;
+    @JsonIgnore
     private String namaGroupMenu;
 
     public String getNama() {

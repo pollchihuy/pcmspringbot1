@@ -14,6 +14,7 @@ import com.example.pcmspringbot1.repo.UserRepo;
 import com.example.pcmspringbot1.security.BcryptImpl;
 import com.example.pcmspringbot1.security.Crypto;
 import com.example.pcmspringbot1.security.JwtUtility;
+import com.example.pcmspringbot1.util.SendMailOTP;
 import com.example.pcmspringbot1.util.TransformationData;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
@@ -110,11 +111,24 @@ public class AppUserDetailService implements UserDetailsService {
                         HttpStatus.BAD_REQUEST,
                         null,"X01007",request);
             }else {
+                /** pengecekan seluruh data selain username , jika email atau pun no hp yang ada dan pernah teregistrasi ataupun tidak maka
+                 *  user diminta untuk mengganti data tersebut
+                 */
                 List<User> ltUser = userRepo.findByUsernameOrNoHpOrEmailAndIsRegistered(user.getUsername(),user.getNoHp(),user.getEmail(),true);
+                User userCheck = ltUser.get(0);
                 if(!ltUser.isEmpty()){
-                    return new ResponseHandler().handleResponse("DATA USERNAME/EMAIL/NO-HP SUDAH TERPAKAI",
-                            HttpStatus.BAD_REQUEST,
-                            null,"X01008",request);
+                    /** email sudah ada di database */
+                    if(userCheck.getEmail().equals(user.getEmail())){
+                        return new ResponseHandler().handleResponse("EMAIL SUDAH TERPAKAI",
+                                HttpStatus.BAD_REQUEST,
+                                null,"X01008",request);
+                    }
+                    /** no hp sudah ada di database */
+                    if(userCheck.getNoHp().equals(user.getNoHp())){
+                        return new ResponseHandler().handleResponse("NO-HP SUDAH TERPAKAI",
+                                HttpStatus.BAD_REQUEST,
+                                null,"X01008",request);
+                    }
                 }else{
                     /** PERNAH REGISTRASI TAPI BELUM SELESAI */
                     userDB.setAlamat(user.getAlamat());
@@ -146,6 +160,7 @@ public class AppUserDetailService implements UserDetailsService {
             mapResponse.put("token", otp);
         }
         /** kalau mau send email, lihat di class ContohController API kirim-email  */
+        SendMailOTP.verifyRegisOTP("OTP Registrasi",user.getNama(),user.getEmail(),String.valueOf(otp));
 //        mapResponse.put("estafet",);//untuk security estafet work flow pada form
         return ResponseEntity.status(HttpStatus.OK).body(mapResponse);
     }
@@ -172,7 +187,10 @@ public class AppUserDetailService implements UserDetailsService {
 
         userDB.setOtp(BcryptImpl.hash(String.valueOf(random.nextInt(111111,999999))));
         userDB.setRegistered(true);
-        return ResponseEntity.status(HttpStatus.OK).body("Registrasi Berhasil !!");
+        return new ResponseHandler().handleResponse("Registrasi Berhasil !!",
+                HttpStatus.OK,
+                null,null,request);
+//        return ResponseEntity.status(HttpStatus.OK).body("Registrasi Berhasil !!");
     }
 
 
