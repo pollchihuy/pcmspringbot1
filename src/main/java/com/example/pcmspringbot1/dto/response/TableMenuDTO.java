@@ -1,14 +1,11 @@
 package com.example.pcmspringbot1.dto.response;
 
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-public class RespMenuDTO {
+public class TableMenuDTO {
 
     private Long id;
     private String nama;
     private String path;
-    private RespGroupMenuDTO groupMenu;
+    private String namaGroupMenu;
 
     public Long getId() {
         return id;
@@ -34,11 +31,11 @@ public class RespMenuDTO {
         this.path = path;
     }
 
-    public RespGroupMenuDTO getGroupMenu() {
-        return groupMenu;
+    public String getNamaGroupMenu() {
+        return namaGroupMenu;
     }
 
-    public void setGroupMenu(RespGroupMenuDTO groupMenu) {
-        this.groupMenu = groupMenu;
+    public void setNamaGroupMenu(String namaGroupMenu) {
+        this.namaGroupMenu = namaGroupMenu;
     }
 }

@@ -1,6 +1,7 @@
 package com.example.pcmspringbot1.model;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.util.Date;
@@ -22,6 +23,7 @@ public class Menu {
     private String path;
 
     @ManyToMany(mappedBy = "ltMenu")
+    @JsonBackReference
     private List<Akses> ltAkses;
 
     @ManyToOne

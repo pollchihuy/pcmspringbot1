@@ -23,9 +23,7 @@ public class GroupMenuController {
 
     @Autowired
     private GroupMenuService groupMenuService;
-
     Map<String,String> mapFilter = new HashMap<>();
-
 
     public GroupMenuController() {
         filterColumnByMap();

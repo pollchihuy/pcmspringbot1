@@ -5,6 +5,7 @@ import com.example.pcmspringbot1.core.IReportForm;
 import com.example.pcmspringbot1.core.IService;
 import com.example.pcmspringbot1.dto.response.RespGroupMenuDTO;
 import com.example.pcmspringbot1.dto.response.RespMenuDTO;
+import com.example.pcmspringbot1.dto.response.TableMenuDTO;
 import com.example.pcmspringbot1.dto.validasi.ValMenuDTO;
 import com.example.pcmspringbot1.handler.ResponseHandler;
 import com.example.pcmspringbot1.model.GroupMenu;
@@ -119,12 +120,12 @@ public class MenuService implements IService<Menu>, IReportForm<Menu> {
         List<Menu> list = null;
         page = menuRepo.findAll(pageable);
         list = page.getContent();
-        List<RespMenuDTO> listDTO = convertToListRespMenuDTO(list);
+//        List<RespMenuDTO> listDTO = convertToListRespMenuDTO(list);
+        List<TableMenuDTO> listDTO = convertToTableMenuDTO(list);
 
         if(list.isEmpty()){
             return GlobalResponse.dataTidakDitemukan(request);
         }
-
         Map<String, Object> mapList = transformPagination.transformPagination(listDTO,page,"id","");
         return GlobalResponse.dataResponseList(mapList,request);
     }
@@ -162,7 +163,8 @@ public class MenuService implements IService<Menu>, IReportForm<Menu> {
         if(list.isEmpty()){
             return GlobalResponse.dataTidakDitemukan(request);
         }
-        List<RespMenuDTO> listDTO = convertToListRespMenuDTO(list);
+//        List<RespMenuDTO> listDTO = convertToListRespMenuDTO(list);
+        List<TableMenuDTO> listDTO = convertToTableMenuDTO(list);
         Map<String, Object> mapList = transformPagination.transformPagination(listDTO,page,columnName,value);
         return GlobalResponse.dataResponseList(mapList,request);
     }
@@ -309,5 +311,19 @@ public class MenuService implements IService<Menu>, IReportForm<Menu> {
 
     public Menu convertToMenu(ValMenuDTO menuDTO){
         return modelMapper.map(menuDTO,Menu.class);
+    }
+
+    public List<TableMenuDTO> convertToTableMenuDTO(List<Menu> menuList){
+        List<TableMenuDTO> list = new ArrayList<>();
+        TableMenuDTO tableMenuDTO ;
+        for(Menu menu : menuList){
+            tableMenuDTO = new TableMenuDTO();
+            tableMenuDTO.setId(menu.getId());
+            tableMenuDTO.setNama(menu.getNama());
+            tableMenuDTO.setPath(menu.getPath());
+            tableMenuDTO.setNamaGroupMenu(menu.getGroupMenu()==null?"":menu.getGroupMenu().getNamaGroupMenu());
+            list.add(tableMenuDTO);
+        }
+        return list;
     }
 }
