@@ -195,7 +195,7 @@ ALTER TABLE [batch23].[MstMenu] SET (LOCK_ESCALATION = TABLE)
     SET IDENTITY_INSERT [batch23].[MstMenu] ON
     GO
 
-    INSERT INTO [batch23].[MstMenu] ([IDMenu], [CreatedBy], [CreatedDate], [NamaMenu], [Path], [UpdatedBy], [UpdatedDate], [IDGroupMenu]) VALUES (N'1', N'Paul', N'2025-01-17 18:33:32.000000', N'Group Menu', N'/group-menu', NULL, NULL, N'1')
+    INSERT INTO [batch23].[MstMenu] ([IDMenu], [CreatedBy], [CreatedDate], [NamaMenu], [Path], [UpdatedBy], [UpdatedDate], [IDGroupMenu]) VALUES (N'1', N'Paul', N'2025-01-17 18:33:32.000000', N'Group-Menu', N'/group-menu', NULL, NULL, N'1')
     GO
 
     INSERT INTO [batch23].[MstMenu] ([IDMenu], [CreatedBy], [CreatedDate], [NamaMenu], [Path], [UpdatedBy], [UpdatedDate], [IDGroupMenu]) VALUES (N'2', N'Paul', N'2025-01-17 18:33:53.000000', N'Menu', N'/menu', NULL, NULL, N'1')
