@@ -89,6 +89,7 @@ public class MenuService implements IService<Menu>, IReportForm<Menu> {
             menuDB.setUpdatedBy("Reksa");
             menuDB.setUpdatedDate(new Date());
             menuDB.setNama(menu.getNama());
+            menuDB.setPath(menu.getPath());
             menuDB.setGroupMenu(menu.getGroupMenu());//ini relasi nya
 
         }catch (Exception e){

@@ -7,8 +7,10 @@ import com.example.pcmspringbot1.dto.response.RespUserDTO;
 import com.example.pcmspringbot1.dto.response.TableUserDTO;
 import com.example.pcmspringbot1.dto.validasi.ValUserDTO;
 import com.example.pcmspringbot1.handler.ResponseHandler;
+import com.example.pcmspringbot1.model.Akses;
 import com.example.pcmspringbot1.model.User;
 import com.example.pcmspringbot1.repo.UserRepo;
+import com.example.pcmspringbot1.security.BcryptImpl;
 import com.example.pcmspringbot1.util.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.modelmapper.ModelMapper;
@@ -25,6 +27,7 @@ import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 /**
@@ -60,6 +63,13 @@ public class UserService implements IService<User>{
             if(user==null){
                 return GlobalResponse.dataTidakValid("FVAUT04001",request);
             }
+            if(user.getAkses()==null){
+                Akses akses = new Akses();
+                akses.setId(2L);
+                user.setAkses(akses);
+            }
+            user.setRegistered(true);
+            user.setPassword(BcryptImpl.hash(user.getUsername()+user.getPassword()));
             user.setCreatedBy("Paul");
             user.setCreatedDate(new Date());
             userRepo.save(user);
@@ -186,8 +196,11 @@ public class UserService implements IService<User>{
             tableUserDTO.setNamaAkses(user.getAkses()==null?"":user.getAkses().getNama());
             tableUserDTO.setNoHp(user.getNoHp());
             tableUserDTO.setAlamat(user.getAlamat());
+            tableUserDTO.setPassword(user.getPassword());
             tableUserDTO.setEmail(user.getEmail());
             tableUserDTO.setUsername(user.getUsername());
+            tableUserDTO.setNama(user.getNama());
+            tableUserDTO.setTanggalLahir(user.getTanggalLahir().format(DateTimeFormatter.ISO_DATE.ofPattern("dd LLLL yyyy")));
             tableUserDTOList.add(tableUserDTO);
         }
         return tableUserDTOList;

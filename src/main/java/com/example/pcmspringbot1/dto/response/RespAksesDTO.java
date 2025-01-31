@@ -7,11 +7,20 @@ import java.util.List;
 
 
 public class RespAksesDTO {
+    private Long id;
 
     private String nama;
 
     @JsonBackReference
     private List<RespMenuDTO> ltMenu;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getNama() {
         return nama;

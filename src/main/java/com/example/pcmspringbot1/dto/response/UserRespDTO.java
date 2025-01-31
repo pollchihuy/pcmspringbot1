@@ -8,6 +8,15 @@ public class UserRespDTO {
     private String alamat;
     private String noHp;
     private RespAksesDTO akses;
+    private String nama;
+
+    public String getNama() {
+        return nama;
+    }
+
+    public void setNama(String nama) {
+        this.nama = nama;
+    }
 
     public Long getId() {
         return id;
