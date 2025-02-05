@@ -97,6 +97,12 @@ public class UserController {
         return userService.findByParam(pageable,column,value,request);
     }
 
+    @PostMapping("/files/upload/{username}")
+    public ResponseEntity<Object> uploadImage(
+            @PathVariable(value = "username") String username,
+            @RequestParam(value = "file") MultipartFile file, HttpServletRequest request){
+        return userService.uploadImage(username,file,request);
+    }
 
     public void filterColumnByMap(){
         mapFilter.put("nama","nama");

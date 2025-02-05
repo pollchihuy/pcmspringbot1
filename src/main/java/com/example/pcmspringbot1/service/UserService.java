@@ -1,5 +1,7 @@
 package com.example.pcmspringbot1.service;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import com.example.pcmspringbot1.config.OtherConfig;
 import com.example.pcmspringbot1.core.IReportForm;
 import com.example.pcmspringbot1.core.IService;
@@ -26,6 +28,12 @@ import org.springframework.web.multipart.MultipartFile;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -38,6 +46,11 @@ import java.util.*;
  */
 @Service
 public class UserService implements IService<User>{
+
+    @Autowired
+    private Cloudinary cloudinary;
+    public static final String BASE_URL_IMAGE = System.getProperty("user.dir")+"\\image-saved";
+    private static Path rootPath;
 
     @Autowired
     private UserRepo userRepo;
@@ -181,6 +194,35 @@ public class UserService implements IService<User>{
         return GlobalResponse.dataResponseList(mapList,request);
     }
 
+    @Transactional
+    public ResponseEntity<Object> uploadImage(String username,MultipartFile file,HttpServletRequest request){
+        Map map ;
+        Map<String,Object> mapResponse ;
+        Optional<User> userOptional = userRepo.findByUsername(username);
+        if(!userOptional.isPresent()){
+            return GlobalResponse.dataTidakDitemukan(request);
+        }
+        rootPath = Paths.get(BASE_URL_IMAGE+"/"+new SimpleDateFormat("ddMMyyyyHHmmssSSS").format(new Date()));
+        String strPathz = rootPath.toAbsolutePath().toString();
+        String strPathzImage = strPathz+"\\"+file.getOriginalFilename();
+        save(file);
+        try {
+            map = cloudinary.uploader().upload(strPathzImage, ObjectUtils.asMap("public_id",file.getOriginalFilename()));
+            User userDB = userOptional.get();
+            userDB.setUpdatedBy(String.valueOf(userDB.getId()));
+            userDB.setUpdatedDate(new Date());
+            userDB.setPathImage(strPathzImage);
+            userDB.setLinkImage(map.get("secure_url").toString());
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+            throw new RuntimeException(e);
+        }
+        Map<String,Object> m = new HashMap<>();
+        m.put("url-img",map.get("secure_url").toString());
+        return ResponseEntity.status(HttpStatus.OK).body(m);
+//        return GlobalResponse.dataResponseObject(m,request);
+    }
+
     public List<RespUserDTO> convertToListRespUserDTO(List<User> userList){
         return modelMapper.map(userList,new TypeToken<List<RespUserDTO>>(){}.getType());
     }
@@ -208,4 +250,38 @@ public class UserService implements IService<User>{
         }
         return tableUserDTOList;
     }
+
+    public void save(MultipartFile file) {
+        try {
+            if (file.isEmpty()) {
+                throw new IllegalArgumentException("Gagal Untuk menyimpan File kosong !!");
+            }
+            Path destinationFile = this.rootPath.resolve(Paths.get(file.getOriginalFilename()))
+                    .normalize().toAbsolutePath();
+            if (!destinationFile.getParent().equals(this.rootPath.toAbsolutePath())) {
+                // This is a security check
+                throw new IllegalArgumentException(
+                        "Tidak Dapat menyimpan file diluar storage yang sudah ditetapkan !!");
+            }
+            Files.createDirectories(this.rootPath);
+            try (InputStream inputStream = file.getInputStream()) {
+                Files.copy(inputStream, destinationFile,
+                        StandardCopyOption.REPLACE_EXISTING);
+            }
+        }
+        catch (IOException e) {
+            System.out.println(e.getMessage());
+            throw new IllegalArgumentException("Failed to store file.", e);
+        }
+    }
+
+//    private Map<String,Object> convertResponseCloudinary(Map m){
+//        Map<String,Object> map = new HashMap<>();
+//        map.put("secure_url",m.get("secure_url"));
+//        map.put("created_at",m.get("created_at"));
+//        map.put("resource_type",m.get("resource_type"));
+//        map.put("type",m.get("type"));
+//        m.clear();
+//        return map;
+//    }
 }

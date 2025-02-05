@@ -90,6 +90,7 @@ public class AppUserDetailService implements UserDetailsService {
         List<MenuLoginDTO> ltMenu =  modelMapper.map(userDB.getAkses().getLtMenu(),new TypeToken<List<MenuLoginDTO>>(){}.getType());
 //        mapResponse.put("token",token);//kalau mau di encrypt
         mapResponse.put("menu",new TransformationData().doTransformAksesMenuLogin(ltMenu));
+        mapResponse.put("urlImage",userDB.getLinkImage());
         return ResponseEntity.status(HttpStatus.OK).body(mapResponse);
     }
 

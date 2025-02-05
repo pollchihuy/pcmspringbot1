@@ -72,7 +72,7 @@ public class Crypto {
     }
 
     public static void main(String[] args) {
-        String strToEncrypt = "nurlcmfhqyogsvui";//put text to encrypt in here
+        String strToEncrypt = "dzjccuhbc";//put text to encrypt in here
         System.out.println("Encryption Result : "+performEncrypt(strToEncrypt));
 
         String strToDecrypt = "c02ba3d5895193b023388229063bbd91";//put text to decrypt in here

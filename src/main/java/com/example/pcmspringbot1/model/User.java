@@ -81,6 +81,12 @@ public class User implements UserDetails {
     @Transient
     private Integer umur;
 
+    @Column(name = "ProfilePicture")
+    private String pathImage;
+
+    @Column(name = "LinkProfilePicture")
+    private String linkImage;
+
     /** ubah saat migrasi DB */
     @Column(name = "IsRegistered",columnDefinition = ("bit default 0"))
     private Boolean isRegistered=false;
@@ -101,6 +107,22 @@ public class User implements UserDetails {
     private String updatedBy;
     @Column(name = "UpdatedDate",insertable = false)
     private Date updatedDate;
+
+    public String getPathImage() {
+        return pathImage;
+    }
+
+    public void setPathImage(String pathImage) {
+        this.pathImage = pathImage;
+    }
+
+    public String getLinkImage() {
+        return linkImage;
+    }
+
+    public void setLinkImage(String linkImage) {
+        this.linkImage = linkImage;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
