@@ -11,6 +11,15 @@ public class TableUserDTO {
     private String namaAkses;
     private String tanggalLahir;
     private String nama;
+    private Integer umur;
+
+    public Integer getUmur() {
+        return umur;
+    }
+
+    public void setUmur(Integer umur) {
+        this.umur = umur;
+    }
 
     public String getNama() {
         return nama;

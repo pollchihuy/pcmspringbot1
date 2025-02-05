@@ -1,5 +1,6 @@
 package com.example.pcmspringbot1.dto.validasi;
 
+import com.example.pcmspringbot1.dto.response.RespMenuDTO;
 import com.example.pcmspringbot1.model.Menu;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -22,11 +23,11 @@ public class ValAksesDTO {
     @NotNull(message = "Field Nama Tidak Boleh NULL")
     @NotEmpty(message = "Field Nama Tidak Boleh Kosong")
     @NotBlank(message = "Field Nama Tidak Boleh Blank")
-    @Pattern(regexp = "^[\\w\\s]{6,40}$",message = "AflaNumerik Dengan Spasi Min 6 Max 40")
+    @Pattern(regexp = "^[a-zA-Z\\s]{2,40}$",message = "AflaNumerik Dengan Spasi Min 2 Max 40")
     private String nama;
 
     @NotNull(message = "Menu Wajib DIISI")
-    private List<Menu> ltMenu;
+    private List<RespMenuDTO> ltMenu;
 
     public String getNama() {
         return nama;
@@ -36,11 +37,11 @@ public class ValAksesDTO {
         this.nama = nama;
     }
 
-    public List<Menu> getLtMenu() {
+    public @NotNull(message = "Menu Wajib DIISI") List<RespMenuDTO> getLtMenu() {
         return ltMenu;
     }
 
-    public void setLtMenu(List<Menu> ltMenu) {
+    public void setLtMenu(@NotNull(message = "Menu Wajib DIISI") List<RespMenuDTO> ltMenu) {
         this.ltMenu = ltMenu;
     }
 }

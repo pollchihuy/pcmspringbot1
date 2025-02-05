@@ -1,17 +1,13 @@
 package com.example.pcmspringbot1.dto.response;
 
-import com.example.pcmspringbot1.model.Menu;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
 import java.util.List;
 
 
-public class RespAksesDTO {
+public class TableAksesDTO {
     private Long id;
 
     private String nama;
 
-    private List<RespMenuDTO> ltMenu;
 
     public Long getId() {
         return id;
@@ -27,13 +23,5 @@ public class RespAksesDTO {
 
     public void setNama(String nama) {
         this.nama = nama;
-    }
-
-    public List<RespMenuDTO> getLtMenu() {
-        return ltMenu;
-    }
-
-    public void setLtMenu(List<RespMenuDTO> ltMenu) {
-        this.ltMenu = ltMenu;
     }
 }

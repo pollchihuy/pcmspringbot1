@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -40,18 +41,21 @@ public class UserController {
     }
 
     @GetMapping("")
+    @PreAuthorize("hasAuthority('User')")
     public ResponseEntity<Object> findAll(
             HttpServletRequest request){
-        Pageable pageable = PageRequest.of(0,10, Sort.by("id"));//asc
+        Pageable pageable = PageRequest.of(0,100, Sort.by("id"));//asc
         return userService.findAll(pageable,request);
     }
 
     @PostMapping("")
+    @PreAuthorize("hasAuthority('User')")
     public ResponseEntity<Object> save(@Valid @RequestBody ValUserDTO userDTO, HttpServletRequest request){
         return userService.save(userService.convertToUser(userDTO),request);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('User')")
     public ResponseEntity<Object> update(
             @PathVariable(value = "id") Long id,
             @Valid @RequestBody ValUserDTO userDTO, HttpServletRequest request){
@@ -59,6 +63,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('User')")
     public ResponseEntity<Object> delete(
             @PathVariable(value = "id") Long id,
             HttpServletRequest request){
@@ -66,12 +71,14 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('User')")
     public ResponseEntity<Object> findById(@PathVariable(value = "id") Long id,
                                            HttpServletRequest request){
         return userService.findById(id,request);
     }
 
     @GetMapping("/{sort}/{sortBy}/{page}")
+    @PreAuthorize("hasAuthority('User')")
     public ResponseEntity<Object> findByParam(
             @PathVariable(value = "sort") String sort,
             @PathVariable(value = "sortBy") String sortBy,//name
@@ -93,6 +100,9 @@ public class UserController {
 
     public void filterColumnByMap(){
         mapFilter.put("nama","nama");
-        mapFilter.put("group","groupMenu");
+        mapFilter.put("username","username");
+        mapFilter.put("umur","umur");
+        mapFilter.put("alamat","alamat");
+        mapFilter.put("password","password");
     }
 }

@@ -16,6 +16,8 @@ public interface MenuRepo extends JpaRepository<Menu,Long> {
     //select * from MstGroupMenu WHERE NamaGroupMenu LIKE toLower('%?%')
     public Page<Menu> findByNamaContainsIgnoreCase(Pageable pageable, String nama);
 
+    public Page<Menu> findByPathContainsIgnoreCase(Pageable pageable, String nama);
+
     // UNTUK REPORT
     public List<Menu> findByNamaContainsIgnoreCase(String nama);
 

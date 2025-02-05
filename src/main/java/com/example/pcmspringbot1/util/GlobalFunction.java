@@ -11,6 +11,7 @@ Version 1.0
 */
 
 import com.example.pcmspringbot1.config.CobaConfig;
+import com.example.pcmspringbot1.security.Crypto;
 import com.example.pcmspringbot1.security.JwtUtility;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,6 +68,7 @@ public class GlobalFunction {
     public static Map<String,Object> extractToken(HttpServletRequest request){
         String token = request.getHeader("Authorization");
         token = token.substring(7);
+        token = Crypto.performDecrypt(token);
         return new JwtUtility().mappingBodyToken(token , new HashMap<>());
     }
 }

@@ -32,6 +32,7 @@ public class TransformPagination {
         map.put("sort",sort.trim().toLowerCase());
         map.put("size-per-page",page.getSize());
         map.put("column-name",column);
+        map.put("sort-by",sortByColumn);
         map.put("value",value);
         return map;
     }

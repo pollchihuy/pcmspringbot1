@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -43,16 +44,19 @@ public class MenuController {
     @GetMapping("")
     public ResponseEntity<Object> findAll(
             HttpServletRequest request){
-        Pageable pageable = PageRequest.of(0,10, Sort.by("id"));//asc
+        Pageable pageable = PageRequest.of(0,100, Sort.by("id"));//asc
         return menuService.findAll(pageable,request);
     }
 
+
     @PostMapping("")
+    @PreAuthorize("hasAuthority('Menu')")
     public ResponseEntity<Object> save(@Valid @RequestBody ValMenuDTO menu, HttpServletRequest request){
         return menuService.save(menuService.convertToMenu(menu),request);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('Menu')")
     public ResponseEntity<Object> update(
             @PathVariable(value = "id") Long id,
             @Valid @RequestBody ValMenuDTO menu, HttpServletRequest request){
@@ -60,6 +64,7 @@ public class MenuController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('Menu')")
     public ResponseEntity<Object> delete(
             @PathVariable(value = "id") Long id,
             HttpServletRequest request){
@@ -67,12 +72,14 @@ public class MenuController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('Menu')")
     public ResponseEntity<Object> findById(@PathVariable(value = "id") Long id,
                                            HttpServletRequest request){
         return menuService.findById(id,request);
     }
 
     @GetMapping("/{sort}/{sortBy}/{page}")
+    @PreAuthorize("hasAuthority('Menu')")
     public ResponseEntity<Object> findByParam(
             @PathVariable(value = "sort") String sort,
             @PathVariable(value = "sortBy") String sortBy,//name
@@ -92,6 +99,7 @@ public class MenuController {
     }
 
     @PostMapping("/upload")
+    @PreAuthorize("hasAuthority('Menu')")
     public ResponseEntity<Object> uploadExcel(
             @RequestParam(value = "file") MultipartFile file,
             HttpServletRequest request){
@@ -99,6 +107,7 @@ public class MenuController {
     }
 
     @GetMapping("/excel")
+    @PreAuthorize("hasAuthority('Menu')")
     public void download(
             @RequestParam(value = "column") String column,
             @RequestParam(value = "value") String value,
@@ -108,6 +117,7 @@ public class MenuController {
     }
 
     @GetMapping("/pdf")
+    @PreAuthorize("hasAuthority('Menu')")
     public void downloadReportPDFMenu(
             @RequestParam(value = "column") String column,
             @RequestParam(value = "value") String value,
@@ -119,6 +129,7 @@ public class MenuController {
 
     public void filterColumnByMap(){
         mapFilter.put("nama","nama");
+        mapFilter.put("path","path");
         mapFilter.put("group","groupMenu");
     }
 }

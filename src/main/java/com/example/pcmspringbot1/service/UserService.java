@@ -162,11 +162,13 @@ public class UserService implements IService<User>{
         Page<User> page = null;
         List<User> list = null;
         switch(columnName){
-
             case "nama": page = userRepo.findByNamaContainsIgnoreCase(pageable,value);break;
             case "nohp": page = userRepo.findByNoHpContainsIgnoreCase(pageable,value);break;
             case "alamat": page = userRepo.findByAlamatContainsIgnoreCase(pageable,value);break;
             case "email": page = userRepo.findByEmailContainsIgnoreCase(pageable,value);break;
+            case "username": page = userRepo.findByUsernameContainsIgnoreCase(pageable,value);break;
+            case "password": page = userRepo.findByPasswordContainsIgnoreCase(pageable,value);break;
+            case "umur": page = userRepo.cariUmur(pageable,value);break;
             default : page = userRepo.findAll(pageable);break;
         }
         list = page.getContent();
@@ -200,6 +202,7 @@ public class UserService implements IService<User>{
             tableUserDTO.setEmail(user.getEmail());
             tableUserDTO.setUsername(user.getUsername());
             tableUserDTO.setNama(user.getNama());
+            tableUserDTO.setUmur(user.getUmur());
             tableUserDTO.setTanggalLahir(user.getTanggalLahir().format(DateTimeFormatter.ISO_DATE.ofPattern("dd LLLL yyyy")));
             tableUserDTOList.add(tableUserDTO);
         }

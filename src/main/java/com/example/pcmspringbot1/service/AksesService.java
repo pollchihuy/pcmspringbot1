@@ -4,10 +4,14 @@ import com.example.pcmspringbot1.config.OtherConfig;
 import com.example.pcmspringbot1.core.IReportForm;
 import com.example.pcmspringbot1.core.IService;
 import com.example.pcmspringbot1.dto.response.RespAksesDTO;
+import com.example.pcmspringbot1.dto.response.SelectAksesDTO;
+import com.example.pcmspringbot1.dto.response.TableAksesDTO;
+import com.example.pcmspringbot1.dto.response.TableMenuDTO;
 import com.example.pcmspringbot1.dto.validasi.ValAksesDTO;
 import com.example.pcmspringbot1.handler.ResponseHandler;
 import com.example.pcmspringbot1.model.Akses;
 import com.example.pcmspringbot1.model.Akses;
+import com.example.pcmspringbot1.model.Menu;
 import com.example.pcmspringbot1.repo.AksesRepo;
 import com.example.pcmspringbot1.util.*;
 import jakarta.servlet.http.HttpServletRequest;
@@ -61,7 +65,7 @@ public class AksesService implements IService<Akses>, IReportForm<Akses> {
             if(akses==null){
                 return GlobalResponse.dataTidakValid("FVAUT03001",request);
             }
-            akses.setCreatedBy(token.get("nm").toString());
+            akses.setCreatedBy(token.get("userId").toString());
             akses.setCreatedDate(new Date());
             akses.setLtMenu(akses.getLtMenu());
 
@@ -122,7 +126,8 @@ public class AksesService implements IService<Akses>, IReportForm<Akses> {
         List<Akses> list = null;
         page = aksesRepo.findAll(pageable);
         list = page.getContent();
-        List<RespAksesDTO> listDTO = convertToListRespAksesDTO(list);
+//        List<RespAksesDTO> listDTO = convertToListRespAksesDTO(list);
+        List<TableAksesDTO> listDTO = convertToTableAksesDTO(list);
 
         if(list.isEmpty()){
             return GlobalResponse.dataTidakDitemukan(request);
@@ -134,21 +139,23 @@ public class AksesService implements IService<Akses>, IReportForm<Akses> {
 
     @Override
     public ResponseEntity<Object> findById(Long id, HttpServletRequest request) {
-        RespAksesDTO respAksesDTO;
+//        RespAksesDTO respAksesDTO;
+        SelectAksesDTO selectAksesDTO;
         try{
             Optional<Akses> aksesOptional = aksesRepo.findById(id);
             if(!aksesOptional.isPresent()){
                 return GlobalResponse.dataTidakDitemukan(request);
             }
             Akses aksesDB = aksesOptional.get();
-            respAksesDTO = modelMapper.map(aksesDB, RespAksesDTO.class);
+//            respAksesDTO = modelMapper.map(aksesDB, RespAksesDTO.class);
+            selectAksesDTO = modelMapper.map(aksesDB, SelectAksesDTO.class);
         }catch (Exception e){
             LoggingFile.logException("AksesService","findById --> Line 162",e, OtherConfig.getEnableLogFile());
             return GlobalResponse.dataGagalDiakses("FEAUT03041",request);
         }
         return new ResponseHandler().handleResponse("OK",
                 HttpStatus.OK,
-                respAksesDTO,null,request);
+                selectAksesDTO,null,request);
     }
 
     @Override
@@ -164,7 +171,8 @@ public class AksesService implements IService<Akses>, IReportForm<Akses> {
         if(list.isEmpty()){
             return GlobalResponse.dataTidakDitemukan(request);
         }
-        List<RespAksesDTO> listDTO = convertToListRespAksesDTO(list);
+//        List<RespAksesDTO> listDTO = convertToListRespAksesDTO(list);
+        List<TableAksesDTO> listDTO = convertToTableAksesDTO(list);
         Map<String, Object> mapList = transformPagination.transformPagination(listDTO,page,columnName,value);
         return GlobalResponse.dataResponseList(mapList,request);
     }
@@ -312,4 +320,38 @@ public class AksesService implements IService<Akses>, IReportForm<Akses> {
     public Akses convertToAkses(ValAksesDTO aksesDTO){
         return modelMapper.map(aksesDTO,Akses.class);
     }
+    public List<TableAksesDTO> convertToTableAksesDTO(List<Akses> aksesList){
+        List<TableAksesDTO> tableAksesDTOList = new ArrayList<>();
+        List<TableMenuDTO> list = null;
+        TableAksesDTO tableAksesDTO = null;
+        for(Akses akses : aksesList){
+            tableAksesDTO = new TableAksesDTO();
+            tableAksesDTO.setId(akses.getId());
+            tableAksesDTO.setNama(akses.getNama());
+            tableAksesDTOList.add(tableAksesDTO);
+        }
+        return tableAksesDTOList;
+    }
+//    public List<TableAksesDTO> convertToTableAksesDTO(List<Akses> aksesList){
+//        List<TableAksesDTO> tableAksesDTOList = new ArrayList<>();
+//        List<TableMenuDTO> list = null;
+//        TableAksesDTO tableAksesDTO = null;
+//        for(Akses akses : aksesList){
+//            tableAksesDTO = new TableAksesDTO();
+//            tableAksesDTO.setId(akses.getId());
+//            tableAksesDTO.setNama(akses.getNama());
+//            List<Menu> ltMenu = akses.getLtMenu();
+//            List<TableMenuDTO> ltTableMenuDTO = new ArrayList<>();
+//            TableMenuDTO tableMenuDTO = null;
+//            for(Menu menu : ltMenu){
+//                tableMenuDTO = new TableMenuDTO();
+//                tableMenuDTO.setId(menu.getId());
+//                tableMenuDTO.setNama(menu.getNama());
+//                ltTableMenuDTO.add(tableMenuDTO);
+//            }
+//            tableAksesDTO.setLtMenu(ltTableMenuDTO);
+//            tableAksesDTOList.add(tableAksesDTO);
+//        }
+//        return tableAksesDTOList;
+//    }
 }

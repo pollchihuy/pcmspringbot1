@@ -80,7 +80,7 @@ public class GlobalResponse {
             HttpServletRequest request
     ){
         return new ResponseHandler().handleResponse("DATA TIDAK DITEMUKAN",
-                HttpStatus.OK,
+                HttpStatus.BAD_REQUEST,
                 null,"X01001",request);
     }
 

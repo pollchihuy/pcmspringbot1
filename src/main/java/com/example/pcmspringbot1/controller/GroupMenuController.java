@@ -77,7 +77,7 @@ public class GroupMenuController {
             @RequestParam(value = "value") String value,
             HttpServletRequest request){
         Pageable pageable = null;
-        sortBy = mapFilter.get(sortBy)==null?"id":sortBy;
+        sortBy = mapFilter.get(sortBy)==null?"id":mapFilter.get(sortBy);
         if(sort.equals("asc")){
             pageable = PageRequest.of(page,size, Sort.by(sortBy));//asc
         }else {
@@ -116,7 +116,7 @@ public class GroupMenuController {
     }
 
     public void filterColumnByMap(){
-        mapFilter.put("nama","nama");
+        mapFilter.put("nama","namaGroupMenu");
         mapFilter.put("group","group");
     }
 }
