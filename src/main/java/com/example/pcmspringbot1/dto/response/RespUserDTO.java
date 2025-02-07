@@ -4,6 +4,8 @@ package com.example.pcmspringbot1.dto.response;
 import com.example.pcmspringbot1.model.Akses;
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
+
 public class RespUserDTO {
     private Long id;
     private String username;
@@ -11,7 +13,25 @@ public class RespUserDTO {
     private String email;
     private String alamat;
     private String noHp;
+    private String nama;
+    private LocalDate tanggalLahir;
     private RespAksesDTO akses;
+
+    public LocalDate getTanggalLahir() {
+        return tanggalLahir;
+    }
+
+    public void setTanggalLahir(LocalDate tanggalLahir) {
+        this.tanggalLahir = tanggalLahir;
+    }
+
+    public String getNama() {
+        return nama;
+    }
+
+    public void setNama(String nama) {
+        this.nama = nama;
+    }
 
     public Long getId() {
         return id;

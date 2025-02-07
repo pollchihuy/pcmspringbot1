@@ -35,6 +35,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -109,8 +110,11 @@ public class UserService implements IService<User>{
             userDB.setUpdatedBy("Reksa");
             userDB.setUpdatedDate(new Date());
             userDB.setNama(user.getNama());
-            userDB.setAkses(user.getAkses());//ini relasi nya
-
+            userDB.setAlamat(user.getAlamat());
+            userDB.setNoHp(user.getNoHp());
+            userDB.setEmail(user.getEmail());
+            userDB.setPassword(BcryptImpl.hash(userDB.getUsername()+ userDB.getTanggalLahir().format(DateTimeFormatter.ofPattern("yyyyMMdd"))));
+            userDB.setAkses(user.getAkses());
         }catch (Exception e){
             LoggingFile.logException("UserService","update --> Line 75",e, OtherConfig.getEnableLogFile());
             return GlobalResponse.dataGagalDiubah("FEAUT04011",request);
@@ -176,7 +180,7 @@ public class UserService implements IService<User>{
         List<User> list = null;
         switch(columnName){
             case "nama": page = userRepo.findByNamaContainsIgnoreCase(pageable,value);break;
-            case "nohp": page = userRepo.findByNoHpContainsIgnoreCase(pageable,value);break;
+            case "noHp": page = userRepo.findByNoHpContainsIgnoreCase(pageable,value);break;
             case "alamat": page = userRepo.findByAlamatContainsIgnoreCase(pageable,value);break;
             case "email": page = userRepo.findByEmailContainsIgnoreCase(pageable,value);break;
             case "username": page = userRepo.findByUsernameContainsIgnoreCase(pageable,value);break;

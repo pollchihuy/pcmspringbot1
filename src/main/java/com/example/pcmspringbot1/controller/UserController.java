@@ -88,7 +88,7 @@ public class UserController {
             @RequestParam(value = "value") String value,
             HttpServletRequest request){
         Pageable pageable = null;
-        sortBy = mapFilter.get(sortBy)==null?"id":sortBy;
+        sortBy = mapFilter.get(sortBy)==null?"id":mapFilter.get(sortBy);
         if(sort.equals("asc")){
             pageable = PageRequest.of(page,size, Sort.by(sortBy));//asc
         }else {
@@ -107,8 +107,11 @@ public class UserController {
     public void filterColumnByMap(){
         mapFilter.put("nama","nama");
         mapFilter.put("username","username");
-        mapFilter.put("umur","umur");
-        mapFilter.put("alamat","alamat");
         mapFilter.put("password","password");
+        mapFilter.put("email","email");
+        mapFilter.put("umur","tanggalLahir");
+        mapFilter.put("tanggalLahir","tanggalLahir");
+        mapFilter.put("alamat","alamat");
+        mapFilter.put("noHp","noHp");
     }
 }

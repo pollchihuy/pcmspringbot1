@@ -22,6 +22,7 @@ public interface UserRepo  extends JpaRepository<User,Long> {
     public Optional<User> findByEmail(String value);
     public List<User> findByUsernameOrNoHpOrEmailAndIsRegistered(String value1,String value2, String value3,Boolean value4);
 
-    @Query(value = "SELECT  x FROM User x WHERE CAST(DATEDIFF(year ,CURRENT_TIMESTAMP ,x.tanggalLahir) AS STRING ) LIKE CONCAT('%',?1,'%') ")
+    /** update when database migration */
+    @Query(value = "SELECT  x FROM User x WHERE CAST(DATEDIFF(year ,x.tanggalLahir,CURRENT_TIMESTAMP)AS STRING) LIKE CONCAT('%',?1,'%') ")
     public Page<User> cariUmur(Pageable pageable, String value);
 }

@@ -162,6 +162,7 @@ public class AppUserDetailService implements UserDetailsService {
         }
         /** kalau mau send email, lihat di class ContohController API kirim-email  */
         SendMailOTP.verifyRegisOTP("OTP Registrasi",user.getNama(),user.getEmail(),String.valueOf(otp));
+        System.out.println(otp);
 //        mapResponse.put("estafet",);//untuk security estafet work flow pada form
         return ResponseEntity.status(HttpStatus.OK).body(mapResponse);
     }
