@@ -72,10 +72,11 @@ public class Crypto {
     }
 
     public static void main(String[] args) {
-        String strToEncrypt = "dzjccuhbc";//put text to encrypt in here
+//        String strToEncrypt = "dzjccuhbc";//put text to encrypt in here
+        String strToEncrypt = "jdbc:sqlserver://host.docker.internal;databaseName=DBPROJECT;schema=batch23;trustServerCertificate=true";//put text to encrypt in here
         System.out.println("Encryption Result : "+performEncrypt(strToEncrypt));
 
-        String strToDecrypt = "c02ba3d5895193b023388229063bbd91";//put text to decrypt in here
+        String strToDecrypt = "64a90dd4d2fa3a326854d37769e5e4eac15e11d98f3a042868db5e83a3c76567da9496df38ef10333a5aa33f14e15dc7e485e50a28862810c9d9afbda03ebe64832f3aabbca944bf34bed3af812fec351b7fc7c9bd26b3d4fdbc31f0297a5ba2";//put text to decrypt in here
 //        String decriptionResult = new Crypto().performDecrypt(strToDecrypt);
         System.out.println("Decryption Result : "+performDecrypt(strToDecrypt));
     }
