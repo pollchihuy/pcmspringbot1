@@ -14,11 +14,11 @@
     <Loggers>
         <!--        PENENTUAN LEVEL DI BAGIAN INI YANG NANTINYA AKAN DIJADIKAN PATOKAN YANG MANA YANG AKAN DI CETAK KE FILE-->
         <Logger name="com.example.pcmspringbot1" level="warn" additivity="false">
-            <AppenderRef ref="Console"/>
+<!--            <AppenderRef ref="Console"/>-->
             <AppenderRef ref="FileLogger"/>
         </Logger>
         <!--        PENENTUAN LEVEL DI BAGIAN INI YANG NANTINYA AKAN DIJADIKAN PATOKAN YANG MANA YANG AKAN DI CETAK KE CONSOLE-->
-        <Root level="info">
+        <Root level="fatal">
             <AppenderRef ref="Console"/>
         </Root>
     </Loggers>
