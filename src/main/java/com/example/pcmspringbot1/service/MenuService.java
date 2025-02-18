@@ -155,7 +155,6 @@ public class MenuService implements IService<Menu>, IReportForm<Menu> {
         Page<Menu> page = null;
         List<Menu> list = null;
         switch(columnName){
-
             case "nama": page = menuRepo.findByNamaContainsIgnoreCase(pageable,value);break;
             case "path": page = menuRepo.findByPathContainsIgnoreCase(pageable,value);break;
             case "group": page = menuRepo.cariGroupMenu(pageable,value);break;
