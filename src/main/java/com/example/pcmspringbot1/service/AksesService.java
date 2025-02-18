@@ -3,6 +3,7 @@ package com.example.pcmspringbot1.service;
 import com.example.pcmspringbot1.config.OtherConfig;
 import com.example.pcmspringbot1.core.IReportForm;
 import com.example.pcmspringbot1.core.IService;
+import com.example.pcmspringbot1.dto.report.ReportAksesDTO;
 import com.example.pcmspringbot1.dto.response.RespAksesDTO;
 import com.example.pcmspringbot1.dto.response.SelectAksesDTO;
 import com.example.pcmspringbot1.dto.response.TableAksesDTO;
@@ -221,8 +222,8 @@ public class AksesService implements IService<Akses>, IReportForm<Akses> {
             default:aksesList= aksesRepo.findAll();break;
         }
         /** menggunakan response karena sama untuk report */
-        List<RespAksesDTO> respGroupAksesDTOList = convertToListRespAksesDTO(aksesList);
-        if(respGroupAksesDTOList.isEmpty()){
+        List<ReportAksesDTO> reportAksesDTOList = convertToListReportAksesDTO(aksesList);
+        if(reportAksesDTOList.isEmpty()){
             GlobalResponse.manualResponse(response,GlobalResponse.dataTidakDitemukan(request));
             return;
         }
@@ -231,12 +232,12 @@ public class AksesService implements IService<Akses>, IReportForm<Akses> {
         String headerKey = "Content-Disposition";
         sbuild.setLength(0);
 
-        String headerValue = sbuild.append("attachment; filename=group-menu_").
+        String headerValue = sbuild.append("attachment; filename=akses_").
                 append(new SimpleDateFormat("dd-MM-yyyy_HH-mm-ss.SSS").format(new Date())).append(".xlsx").toString();
         response.setHeader(headerKey, headerValue);
         response.setContentType("application/octet-stream");
 
-        Map<String,Object> map = GlobalFunction.convertClassToObject(new RespAksesDTO());
+        Map<String,Object> map = GlobalFunction.convertClassToObject(new ReportAksesDTO());
         List<String> listTemp = new ArrayList<>();
         for(Map.Entry<String,Object> entry : map.entrySet()){
             listTemp.add(entry.getKey());
@@ -252,10 +253,10 @@ public class AksesService implements IService<Akses>, IReportForm<Akses> {
             loopDataArr[i] = listTemp.get(i);
         }
         /** Untuk mempersiapkan data body baris nya */
-        int listRespGroupAksesDTOSize = respGroupAksesDTOList.size();
+        int listRespGroupAksesDTOSize = reportAksesDTOList.size();
         String [][] strBody = new String[listRespGroupAksesDTOSize][intListTemp];
         for(int i=0;i<listRespGroupAksesDTOSize;i++){
-            map = GlobalFunction.convertClassToObject(respGroupAksesDTOList.get(i));
+            map = GlobalFunction.convertClassToObject(reportAksesDTOList.get(i));
             for(int j=0;j<intListTemp;j++){
                 strBody[i][j] = String.valueOf(map.get(loopDataArr[j]));
             }
@@ -266,17 +267,16 @@ public class AksesService implements IService<Akses>, IReportForm<Akses> {
     @Override
     public void generateToPDF(String column, String value, HttpServletRequest request, HttpServletResponse response) {
         Map<String,Object> token = GlobalFunction.extractToken(request);
-        List<Akses> menuList = null;
+        List<Akses> aksesList = null;
         switch (column){
-            case "nama":menuList= aksesRepo.findByNamaContainsIgnoreCase(value);break;
+            case "nama":aksesList= aksesRepo.findByNamaContainsIgnoreCase(value);break;
 //            case "group":menuList= menuRepo.cariGroupAkses(value);break;
-            default:menuList= aksesRepo.findAll();break;
+            default:aksesList= aksesRepo.findAll();break;
         }
         /** menggunakan response karena sama untuk report */
-        List<RespAksesDTO> respGroupAksesDTOList = convertToListRespAksesDTO(menuList);
-        int intRespGroupAksesDTOList = respGroupAksesDTOList.size();
-
-        if(respGroupAksesDTOList.isEmpty()){
+        List<ReportAksesDTO> reportAksesDTOList = convertToListReportAksesDTO(aksesList);
+        int intReportAksesDTOList = reportAksesDTOList.size();
+        if(reportAksesDTOList.isEmpty()){
             GlobalResponse.manualResponse(response,GlobalResponse.dataTidakDitemukan(request));
             return;
         }
@@ -285,7 +285,7 @@ public class AksesService implements IService<Akses>, IReportForm<Akses> {
         Map<String,Object> map = new HashMap<>();
         String strHtml = null;
         Context context = new Context();
-        Map<String,Object> mapColumnName = GlobalFunction.convertClassToObject(new RespAksesDTO());
+        Map<String,Object> mapColumnName = GlobalFunction.convertClassToObject(new ReportAksesDTO());
         List<String> listTemp = new ArrayList<>();
         List<String> listHelper = new ArrayList<>();
         for (Map.Entry<String,Object> entry : mapColumnName.entrySet()) {
@@ -294,8 +294,8 @@ public class AksesService implements IService<Akses>, IReportForm<Akses> {
         }
         Map<String,Object> mapTemp = null;
         List<Map<String,Object>> listMap = new ArrayList<>();
-        for(int i=0;i<listTemp.size();i++){
-            mapTemp = GlobalFunction.convertClassToObject(menuList.get(i));
+        for(int i=0;i<reportAksesDTOList.size();i++){
+            mapTemp = GlobalFunction.convertClassToObject(reportAksesDTOList.get(i));
             listMap.add(mapTemp);
         }
 
@@ -303,7 +303,7 @@ public class AksesService implements IService<Akses>, IReportForm<Akses> {
         map.put("listKolom",listTemp);
         map.put("listHelper",listHelper);
         map.put("timestamp",new Date());
-        map.put("totalData",intRespGroupAksesDTOList);
+        map.put("totalData",intReportAksesDTOList);
         map.put("listContent",listMap);
         map.put("username",token.get("namaLengkap"));
         context.setVariables(map);
@@ -313,6 +313,9 @@ public class AksesService implements IService<Akses>, IReportForm<Akses> {
 
     public List<RespAksesDTO> convertToListRespAksesDTO(List<Akses> aksesList){
         return modelMapper.map(aksesList,new TypeToken<List<RespAksesDTO>>(){}.getType());
+    }
+    public List<ReportAksesDTO> convertToListReportAksesDTO(List<Akses> aksesList){
+        return modelMapper.map(aksesList,new TypeToken<List<ReportAksesDTO>>(){}.getType());
     }
 
     public Akses convertToAkses(ValAksesDTO aksesDTO){

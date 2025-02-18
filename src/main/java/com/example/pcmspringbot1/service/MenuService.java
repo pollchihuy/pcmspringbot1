@@ -214,12 +214,12 @@ public class MenuService implements IService<Menu>, IReportForm<Menu> {
         List<Menu> menuList = null;
         switch (column){
             case "nama":menuList= menuRepo.findByNamaContainsIgnoreCase(value);break;
-//            case "group":menuList= menuRepo.cariGroupMenu(value);break;
+            case "path":menuList= menuRepo.findByPathContainsIgnoreCase(value);break;
             default:menuList= menuRepo.findAll();break;
         }
         /** menggunakan response karena sama untuk report */
-        List<RespMenuDTO> respGroupMenuDTOList = convertToListRespMenuDTO(menuList);
-        if(respGroupMenuDTOList.isEmpty()){
+        List<TableMenuDTO> tableMenuDTOList = convertToTableMenuDTO(menuList);
+        if(tableMenuDTOList.isEmpty()){
             GlobalResponse.manualResponse(response,GlobalResponse.dataTidakDitemukan(request));
             return;
         }
@@ -228,12 +228,12 @@ public class MenuService implements IService<Menu>, IReportForm<Menu> {
         String headerKey = "Content-Disposition";
         sbuild.setLength(0);
 
-        String headerValue = sbuild.append("attachment; filename=group-menu_").
+        String headerValue = sbuild.append("attachment; filename=menu_").
                 append(new SimpleDateFormat("dd-MM-yyyy_HH-mm-ss.SSS").format(new Date())).append(".xlsx").toString();
         response.setHeader(headerKey, headerValue);
         response.setContentType("application/octet-stream");
 
-        Map<String,Object> map = GlobalFunction.convertClassToObject(new RespMenuDTO());
+        Map<String,Object> map = GlobalFunction.convertClassToObject(new TableMenuDTO());
         List<String> listTemp = new ArrayList<>();
         for(Map.Entry<String,Object> entry : map.entrySet()){
             listTemp.add(entry.getKey());
@@ -249,10 +249,10 @@ public class MenuService implements IService<Menu>, IReportForm<Menu> {
             loopDataArr[i] = listTemp.get(i);
         }
         /** Untuk mempersiapkan data body baris nya */
-        int listRespGroupMenuDTOSize = respGroupMenuDTOList.size();
-        String [][] strBody = new String[listRespGroupMenuDTOSize][intListTemp];
-        for(int i=0;i<listRespGroupMenuDTOSize;i++){
-            map = GlobalFunction.convertClassToObject(respGroupMenuDTOList.get(i));
+        int listTableMenuDTOSize = tableMenuDTOList.size();
+        String [][] strBody = new String[listTableMenuDTOSize][intListTemp];
+        for(int i=0;i<listTableMenuDTOSize;i++){
+            map = GlobalFunction.convertClassToObject(tableMenuDTOList.get(i));
             for(int j=0;j<intListTemp;j++){
                 strBody[i][j] = String.valueOf(map.get(loopDataArr[j]));
             }
@@ -265,14 +265,14 @@ public class MenuService implements IService<Menu>, IReportForm<Menu> {
         List<Menu> menuList = null;
         switch (column){
             case "nama":menuList= menuRepo.findByNamaContainsIgnoreCase(value);break;
-//            case "group":menuList= menuRepo.cariGroupMenu(value);break;
+            case "path":menuList= menuRepo.findByPathContainsIgnoreCase(value);break;
             default:menuList= menuRepo.findAll();break;
         }
         /** menggunakan response karena sama untuk report */
-        List<RespMenuDTO> respGroupMenuDTOList = convertToListRespMenuDTO(menuList);
-        int intRespGroupMenuDTOList = respGroupMenuDTOList.size();
+        List<TableMenuDTO> tableMenuDTOS = convertToTableMenuDTO(menuList);
+        int intTableMenuDTOList = tableMenuDTOS.size();
 
-        if(respGroupMenuDTOList.isEmpty()){
+        if(tableMenuDTOS.isEmpty()){
             GlobalResponse.manualResponse(response,GlobalResponse.dataTidakDitemukan(request));
             return;
         }
@@ -281,7 +281,7 @@ public class MenuService implements IService<Menu>, IReportForm<Menu> {
         Map<String,Object> map = new HashMap<>();
         String strHtml = null;
         Context context = new Context();
-        Map<String,Object> mapColumnName = GlobalFunction.convertClassToObject(new RespMenuDTO());
+        Map<String,Object> mapColumnName = GlobalFunction.convertClassToObject(new TableMenuDTO());
         List<String> listTemp = new ArrayList<>();
         List<String> listHelper = new ArrayList<>();
         for (Map.Entry<String,Object> entry : mapColumnName.entrySet()) {
@@ -290,8 +290,8 @@ public class MenuService implements IService<Menu>, IReportForm<Menu> {
         }
         Map<String,Object> mapTemp = null;
         List<Map<String,Object>> listMap = new ArrayList<>();
-        for(int i=0;i<menuList.size();i++){
-            mapTemp = GlobalFunction.convertClassToObject(menuList.get(i));
+        for(int i=0;i<tableMenuDTOS.size();i++){
+            mapTemp = GlobalFunction.convertClassToObject(tableMenuDTOS.get(i));
             listMap.add(mapTemp);
         }
 
@@ -299,7 +299,7 @@ public class MenuService implements IService<Menu>, IReportForm<Menu> {
         map.put("listKolom",listTemp);
         map.put("listHelper",listHelper);
         map.put("timestamp",new Date());
-        map.put("totalData",intRespGroupMenuDTOList);
+        map.put("totalData",intTableMenuDTOList);
         map.put("listContent",listMap);
         map.put("username","Paul");
         context.setVariables(map);

@@ -20,6 +20,7 @@ public interface MenuRepo extends JpaRepository<Menu,Long> {
 
     // UNTUK REPORT
     public List<Menu> findByNamaContainsIgnoreCase(String nama);
+    public List<Menu> findByPathContainsIgnoreCase(String nama);
 
     @Query(value = "SELECT m FROM Menu m WHERE lower(m.groupMenu.namaGroupMenu) LIKE lower(concat('%',?1,'%'))")
     public Page<Menu> cariGroupMenu(Pageable pageable, String nama);
