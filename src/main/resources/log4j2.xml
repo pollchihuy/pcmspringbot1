@@ -18,7 +18,7 @@
             <AppenderRef ref="FileLogger"/>
         </Logger>
         <!--        PENENTUAN LEVEL DI BAGIAN INI YANG NANTINYA AKAN DIJADIKAN PATOKAN YANG MANA YANG AKAN DI CETAK KE CONSOLE-->
-        <Root level="fatal">
+        <Root level="info">
             <AppenderRef ref="Console"/>
         </Root>
     </Loggers>
